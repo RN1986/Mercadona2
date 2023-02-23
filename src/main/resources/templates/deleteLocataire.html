@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Fiche Locataire</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container">
+<h1 class="my-5">Suppression d'un Locataire</h1>
+<table class="table table-striped table-bordered">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Email</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="locataire : ${locataires}">
+    <td th:text="${locataire.get().locataire_id}"></td>
+    <td th:text="${locataire.get().nom}"></td>
+    <td th:text="${locataire.get().prenom}"></td>
+    <td th:text="${locataire.get().email}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<form class="col card p-3" method="post" th:action="@{/deleteLocataire/{locataire_id}(locataire_id=${locataires.get().getLocataire_id()})}">
+  <div class="form-group"> Vous êtes sur le point de supprimer ce locataire
+    </div>
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="Supprimer définitivement le locataire" />
+  </div>
+</form>
+
+</body>
+</html>

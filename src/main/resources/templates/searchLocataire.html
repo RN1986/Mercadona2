@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Recherche étudiant</title>
+</head>
+<body>
+
+<h1>Recherche étudiant</h1>
+
+<form action="#" th:action="@{/api/v1/student/search}" th:object="${student}" method="post">
+
+  <label>Nom :</label>
+  <input type="text" th:field="*{name}" /><br />
+
+  <label>Email :</label>
+  <input type="text" th:field="*{email}" /><br />
+
+  <input type="submit" value="Rechercher"/>
+</form>
+
+<table>
+  <thead>
+
+  </thead>
+  <tbody>
+  <tr>
+    <th>Id</th>
+    <th>Nom</th>
+    <th>Email</th>
+    <th>Age</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr th:each="student : ${students}">
+    <td th:text="${student.id}"></td>
+    <td th:text="${student.name}"></td>
+    <td th:text="${student.email}"></td>
+    <td th:text="${student.dob}"></td>
+
+  </tr>
+  </tbody>
+
+</table>
+
+</body>
+</html>

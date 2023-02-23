@@ -1,0 +1,62 @@
+<!doctype html >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>Thymeleaf Form handling Demo</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body class="container">
+<h1>Ajouter un locataire</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{/createLocataire}" th:object="${locataire_new}">
+  <div class="form-group">
+    <label for="nom">Nom</label>
+    <input class="form-control" id="nom" placeholder="Entrez le nom" required autocomplete="off"
+           th:field="*{nom}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="prenom">Prénom</label>
+    <input class="form-control" id="prenom" placeholder="Entrez le prénom" required  autocomplete="off"
+           th:field="*{prenom}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input class="form-control" id="email" placeholder="Entrez l'email" required autocomplete="off"
+           th:field="*{email}"
+           type="text"/>
+  </div>
+  <div>
+    <input class="btn btn-primary" type="submit" value="Ajouter un locataire">
+    <input class="btn btn-dark" type="reset" value="Reset">
+  </div>
+</form>
+
+<div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
+<table class="table table-striped table-bordered " method="get" th:action="@{/}" th:object="${locataires}">
+  <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Email</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:if="${#lists.isEmpty(locataires)}">
+    <td class="text-center" colspan="7">Aucun locataire enregistré</td>
+  </tr>
+  <tr th:each="locataire : ${locataires}">
+    <td class="align-middle" th:text="${locataire.locataire_id}"></td>
+    <td class="align-middle" th:text="${locataire.nom}"></td>
+    <td class="align-middle" th:text="${locataire.prenom}"></td>
+    <td class="align-middle" th:text="${locataire.email}"></td>
+     <td class="align-middle text-center"><a class="btn btn-secondary" th:href="'/ficheLocataire/' + ${locataire.locataire_id}">✏</a></td>
+  </tr>
+</table>
+</body>
+</html>

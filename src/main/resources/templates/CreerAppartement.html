@@ -1,0 +1,86 @@
+<!doctype html >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>Thymeleaf Form handling Demo</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body class="container">
+<h1>Ajouter un appartement</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{/createAppartement}" th:object="${appartement_new}">
+  <div class="form-group">
+    <label for="adresse">Adresse</label>
+    <input class="form-control" id="adresse" placeholder="Entrez l'adresse" required autocomplete="off"
+           th:field="*{adresse}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="complement">Complément</label>
+    <input class="form-control" id="complement" placeholder="Entrez le complément d'adresse (facultatif)"  autocomplete="off"
+           th:field="*{complement}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="codepostal">Code postal</label>
+    <input class="form-control" id="codepostal" placeholder="Entrez le code postal" required autocomplete="off"
+           th:field="*{codepostal}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="loyer">Loyer</label>
+    <input class="form-control" id="loyer" placeholder="Entrez le montant du loyer" required autocomplete="off"
+           th:field="*{loyer}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="charges">Charges</label>
+    <input class="form-control" id="charges" placeholder="Entrez le montant des charges" required autocomplete="off"
+           th:field="*{charges}"
+           type="text"/>
+  </div>
+  <div class="form-group">
+    <label for="depotdegarantie">Dépôt de garantie</label>
+    <input class="form-control" id="depotdegarantie" placeholder="Entrez le montant du dépôt de garantie" required autocomplete="off"
+           th:field="*{depotdegarantie}"
+           type="text"/>
+  </div>
+  <div>
+    <input class="btn btn-primary" type="submit" value="Ajouter un appartement">
+    <input class="btn btn-dark" type="reset" value="Reset">
+  </div>
+</form>
+
+<div th:if="${appartementMessage}" th:utext="${appartementMessage}" class="alert alert-success text-center"></div>
+<table class="table table-striped table-bordered " method="get" th:action="@{/}" th:object="${appartements}">
+  <tr>
+    <th>ID</th>
+    <th>Adresse</th>
+    <th>Complément</th>
+    <th>Code postal</th>
+    <th>Loyer</th>
+    <th>Charges</th>
+    <th>Dépôt de garantie</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:if="${#lists.isEmpty(appartements)}">
+    <td class="text-center" colspan="7">Aucun appartement enregistré</td>
+  </tr>
+  <tr th:each="appartement : ${appartements}">
+    <td class="align-middle" th:text="${appartement.appartement_id}"></td>
+    <td class="align-middle" th:text="${appartement.adresse}"></td>
+    <td class="align-middle" th:text="${appartement.complement}"></td>
+    <td class="align-middle" th:text="${appartement.codepostal}"></td>
+    <td class="align-middle" th:text="${appartement.loyer}"></td>
+    <td class="align-middle" th:text="${appartement.charges}"></td>
+    <td class="align-middle" th:text="${appartement.depotdegarantie}"></td>
+     <td class="align-middle text-center"><a class="btn btn-secondary" th:href="'/ficheAppartement/' + ${appartement.appartement_id}">✏</a></td>
+  </tr>
+</table>
+</body>
+</html>

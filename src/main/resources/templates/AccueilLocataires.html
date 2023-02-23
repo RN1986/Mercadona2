@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>Page d'accueil</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <h1>Bienvenue sur votre plateforme de gestion des locataires</h1>
+  <div class="row mt-5">
+      <div class="col-md-6">
+      <a href="/searchLocataire" class="btn btn-primary btn-lg btn-block">Rechercher un locataire</a>
+    </div>
+    <div class="col-md-6">
+      <a href="/createLocataire" class="btn btn-primary btn-lg btn-block">Ajouter un locataire</a>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <a href="/searchAppartement" class="btn btn-primary btn-lg btn-block">Rechercher un appartement</a>
+    </div>
+    <div class="col-md-6">
+      <a href="/createAppartement" class="btn btn-primary btn-lg btn-block">Ajouter un appartement</a>
+    </div>
+  </div>
+
+</div>
+<div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
+</body>
+</html>
