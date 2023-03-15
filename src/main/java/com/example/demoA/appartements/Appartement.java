@@ -12,21 +12,23 @@ public class Appartement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer appartement_id;
     private String adresse;
+    private String ville;
     private String complement;
     private Integer codepostal;
     private Integer loyer;
     private Integer charges;
     private Integer depotdegarantie;
     @ManyToOne
-    @JoinColumn(name = "locataire_locataire_id")
+    @JoinColumn(name = "locataire_id")
     private Locataire locataire;
 
     public Appartement() {
     }
 
-    public Appartement(Integer appartement_id, String adresse, String complement, Integer codepostal, Integer loyer, Integer charges, Integer depotdegarantie) {
+    public Appartement(Integer appartement_id, String adresse,String ville, String complement, Integer codepostal, Integer loyer, Integer charges, Integer depotdegarantie) {
         this.appartement_id = appartement_id;
         this.adresse = adresse;
+        this.ville = ville;
         this.complement = complement;
         this.codepostal = codepostal;
         this.loyer = loyer;
@@ -88,5 +90,25 @@ public class Appartement {
 
     public void setDepot_de_garantie(Integer depot_de_garantie) {
         this.depotdegarantie = depotdegarantie;
+    }
+
+    public void setDepotdegarantie(Integer depotdegarantie) {
+        this.depotdegarantie = depotdegarantie;
+    }
+
+    public Locataire getLocataire() {
+        return locataire;
+    }
+
+    public void setLocataire(Locataire locataire) {
+        this.locataire = locataire;
+    }
+
+    public String getVille() {
+        return ville;
+    }
+
+    public void setVille(String ville) {
+        this.ville = ville;
     }
 }

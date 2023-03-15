@@ -11,6 +11,9 @@
         rel="stylesheet">
 </head>
 <body class="container">
+<div class="col-md-6">
+  <a href="/AccueilLocataires" class="btn btn-secondary">Accueil</a>
+</div>
 <h1>Ajouter un locataire</h1>
 
 <form class="col card p-3 my-5" method="post" th:action="@{/createLocataire}" th:object="${locataire_new}">

@@ -1,24 +1,41 @@
 package com.example.demoA.etatDesLieux;
 
+import com.example.demoA.locataires.Locataire;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
+@Getter
+@Setter
 @Data
 @Entity
 public class EtatDesLieux {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer etatdeslieux_id;
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private EtatDesLieuxType type;
     private String commentaires;
-    private Date date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "locataire_id")
+    private Locataire locataire;
+
 
     public EtatDesLieux() {
+    }
+
+    public EtatDesLieux(EtatDesLieuxType type, String commentaires, LocalDate date) {
+        this.type = type;
+        this.commentaires = commentaires;
+        this.date = date;
     }
 
     public Integer getEtatdeslieux_id() {
@@ -29,11 +46,11 @@ public class EtatDesLieux {
         this.etatdeslieux_id = etatdeslieux_id;
     }
 
-    public String getType() {
+    public EtatDesLieuxType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(EtatDesLieuxType type) {
         this.type = type;
     }
 
@@ -45,11 +62,19 @@ public class EtatDesLieux {
         this.commentaires = commentaires;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public Locataire getLocataire() {
+        return locataire;
+    }
+
+    public void setLocataire(Locataire locataire) {
+        this.locataire = locataire;
     }
 }

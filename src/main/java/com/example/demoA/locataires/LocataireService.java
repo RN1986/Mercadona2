@@ -37,5 +37,11 @@ public class LocataireService {
     public void updateLocataire(Locataire updatedLocataire) {
         locataireRepository.save(updatedLocataire);
     }
+
+    public Locataire getLocataireSelonId(Integer locataire_id) {
+        return locataireRepository.findByLocataire_id(locataire_id);
+    }
+
+
 }
 

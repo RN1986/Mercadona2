@@ -1,0 +1,94 @@
+<!doctype html >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>Thymeleaf Form handling Demo</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body class="container">
+<h1>Ajouter un paiement</h1>
+
+<form class="col card p-3 my-5" method="post" th:action="@{/createPaiement}" th:object="${paiement_new}">
+  <div class="form-group">
+    <label for="origine">Origine</label>
+    <select class="form-control" id="origine" name="origine" required>
+      <option value="">Choisissez une option</option>
+      <option value="Locataire">Locataire</option>
+      <option value="CAF">CAF</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="montant">Montant</label>
+    <input class="form-control" id="montant" placeholder="Entrez le montant"  autocomplete="off"
+           th:field="*{montant}"
+           type="text"/>
+  </div>
+
+    <div class="form-group">
+      <label for="objet">Objet</label>
+      <select class="form-control" id="objet" name="objet" required>
+        <option value="">Choisissez une option</option>
+        <option value="Dépôt de garantie">Dépôt de garantie</option>
+        <option value="Loyer">Loyer</option>
+        <option value="Charges">Charges</option>
+      </select>
+    </div>
+
+  <div class="form-group">
+    <label for="date">Date</label>
+    <input class="form-control" id="date" placeholder="Entrez la date du paiement" required autocomplete="off"
+           th:field="*{date}"
+           type="date"/>
+  </div>
+
+  <div class="form-group">
+    <label for="appartement">Appartement:</label>
+    <select class="form-control" id="appartement" name="appartement">
+      <option value="">Sélectionnez un appartement</option>
+      <th:block th:each="appartement : ${appartements}">
+        <option th:value="${appartement.getAppartement_id}" th:text="${appartement.getCodepostal}+ ' ' +${appartement.getAdresse}"></option>
+      </th:block>
+    </select>
+  </div>
+
+  <div>
+    <input class="btn btn-primary" type="submit" value="Ajouter un paiement">
+    <input class="btn btn-dark" type="reset" value="Reset">
+  </div>
+</form>
+
+<div th:if="${paiementMessage}" th:utext="${paiementMessage}" class="alert alert-success text-center"></div>
+
+<table class="table table-striped table-bordered " method="get" th:action="@{/}" th:object="${appartements}">
+  <tr>
+    <th>ID</th>
+    <th>Adresse</th>
+    <th>Complément</th>
+    <th>Code postal</th>
+    <th>Loyer</th>
+    <th>Charges</th>
+    <th>Dépôt de garantie</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:if="${#lists.isEmpty(appartements)}">
+    <td class="text-center" colspan="7">Aucun appartement enregistré</td>
+  </tr>
+  <tr th:each="appartement : ${appartements}">
+    <td class="align-middle" th:text="${appartement.appartement_id}"></td>
+    <td class="align-middle" th:text="${appartement.adresse}"></td>
+    <td class="align-middle" th:text="${appartement.complement}"></td>
+    <td class="align-middle" th:text="${appartement.codepostal}"></td>
+    <td class="align-middle" th:text="${appartement.loyer}"></td>
+    <td class="align-middle" th:text="${appartement.charges}"></td>
+    <td class="align-middle" th:text="${appartement.depotdegarantie}"></td>
+     <td class="align-middle text-center"><a class="btn btn-secondary" th:href="'/ficheAppartement/' + ${appartement.appartement_id}">✏</a></td>
+  </tr>
+</table>
+</body>
+</html>

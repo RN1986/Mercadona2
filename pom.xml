@@ -51,7 +51,17 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.github.houbb</groupId>
+            <artifactId>valid</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.lixbox.lixbox-param</groupId>
+            <artifactId>lixbox-param-client</artifactId>
+            <version>11.1.2.24</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

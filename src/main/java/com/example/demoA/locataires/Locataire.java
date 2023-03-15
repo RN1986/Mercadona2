@@ -14,6 +14,7 @@ public class Locataire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locataire_id;
+
     private String nom;
     private String prenom;
     private String email;

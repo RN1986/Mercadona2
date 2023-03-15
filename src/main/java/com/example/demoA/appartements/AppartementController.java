@@ -1,6 +1,7 @@
 package com.example.demoA.appartements;
 
 import com.example.demoA.locataires.Locataire;
+import com.example.demoA.locataires.LocataireRepository;
 import com.example.demoA.locataires.LocataireService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import java.util.Optional;
 public class AppartementController {
     private final AppartementService appartementService;
     private final LocataireService locataireService;
-    public AppartementController(AppartementService appartementService, LocataireService locataireService) {
+
+    public AppartementController(AppartementService appartementService, LocataireService locataireService, LocataireRepository locataireRepository) {
         this.appartementService = appartementService;
         this.locataireService = locataireService;
+
     }
     //Créer Appartements
     @RequestMapping(path = "/createAppartement", method = RequestMethod.GET)
@@ -69,26 +72,33 @@ public class AppartementController {
     //Fiche Appartement
     @RequestMapping(path = "/ficheAppartement/{appartement_id}", method = RequestMethod.GET)
     public String ficheAppartement(Model model, @PathVariable("appartement_id") Integer appartement_id) {
-        Optional<Appartement> appartements = appartementService.getAppartementById(appartement_id);
-        model.addAttribute("appartements", appartements);
+
+        Appartement appartement = appartementService.findselonId(appartement_id);
+        Integer locataire_id = appartementService.findLocataireIdByAppartementId(appartement_id);
+
+        Locataire locataire = locataireService.getLocataireSelonId(locataire_id);
+
+
+
+        model.addAttribute("appartement", appartement);
+        model.addAttribute("locataire", locataire);
+
         return "ficheAppartement";
     }
 
     @RequestMapping(path = "/ficheAppartement/{appartement_id}", method = RequestMethod.POST)
     public RedirectView updateAppartement(RedirectAttributes redirectAttributes, Model model, @PathVariable("appartement_id") Integer appartement_id, @RequestParam("adresse") String adresse, @RequestParam("complement") String complement, @RequestParam("codepostal") Integer codepostal, @RequestParam("loyer") Integer loyer, @RequestParam("charges") Integer charges, @RequestParam("depotdegarantie") Integer depotdegarantie) {
         RedirectView redirectView = new RedirectView("/ficheAppartement/{appartement_id}", true);
-        ;
-        Optional<Appartement> appartements = appartementService.getAppartementById(appartement_id);
-        if (appartements.isPresent()) {
-            Appartement updatedAppartement = appartements.get();
-            updatedAppartement.setAdresse(adresse);
-            updatedAppartement.setComplement(complement);
-            updatedAppartement.setCodepostal(codepostal);
-            updatedAppartement.setLoyer(loyer);
-            updatedAppartement.setCharges(charges);
-            updatedAppartement.setDepotdegarantie(depotdegarantie);
-            appartementService.updateAppartement(updatedAppartement);
-        }
+        Appartement appartement = appartementService.findselonId(appartement_id);
+
+        appartement.setAdresse(adresse);
+        appartement.setComplement(complement);
+        appartement.setCodepostal(codepostal);
+        appartement.setLoyer(loyer);
+        appartement.setCharges(charges);
+        appartement.setDepotdegarantie(depotdegarantie);
+            appartementService.updateAppartement(appartement);
+
         String message = "Votre modification a bien été prise en compte ✨.";
 
         redirectAttributes.addFlashAttribute("AppartementMessage", message);

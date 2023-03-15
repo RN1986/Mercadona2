@@ -22,6 +22,8 @@ public interface LocataireRepository extends JpaRepository<Locataire,Integer> {
     List<Locataire> findAll();
 
     Optional<Locataire> findById(Integer locataire_id);
+    @Query("SELECT l FROM Locataire l WHERE l.locataire_id=?1")
+    Locataire findByLocataire_id(Integer locataire_id);
 
     ArrayList<Locataire> findByNom(String nom);
 

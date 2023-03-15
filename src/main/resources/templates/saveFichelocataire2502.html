@@ -64,6 +64,7 @@
 </table>
 <h3>Ajouter un appartement</h3>
 <form class="col card p-3" method="post" th:action="@{/ficheLocataire/{locataire_id}/addappartement(locataire_id=${locataires.get().getLocataire_id()})}">
+
   <div class="form-group">
     <label for="appartement">Appartement:</label>
     <select class="form-control" id="appartement" name="appartement">
@@ -73,36 +74,35 @@
       </th:block>
     </select>
   </div>
+  <!--
+      <fieldset th:object="${etatDesLieux}">
+        <legend>Etat des lieux</legend>
+        <div class="form-group">
+          <label for="dateEDL">Date de l'état des lieux d'entrée</label>
+          <input class="form-control" id="dateEDL" placeholder="Entrez la date de l'état des lieux d'entrée " required autocomplete="off"
+                 th:field="*{date}"
+                 type="date"/>
 
-  <div class="form-group">
-    <label for="dateEDL">Date du paiement du dépôt de garantie :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-      </div>
-      <input type="date" id="dateDDG" name="dateDDG" th:value="${dateDDG}" class="form-control" required />
-    </div>
-  </div>
+        </div>
+        <div class="form-group">
+          <label for="commentaires">Commentaires de l'état des lieux d'entrée</label>
+          <input class="form-control" id="commentaires" placeholder="Entrez les commentaires de l'état des lieux d'entrée " required autocomplete="off"
+                 th:field="*{commentaires}"
+                 type="text"/>
 
-  <div class="form-group">
-    <label for="dateEDL">Date de l'état des lieux d'entrée :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-      </div>
-      <input type="date" id="dateEDL" name="dateEDL" th:value="${dateEDL}" class="form-control" required />
-    </div>
-  </div>
+        </div>
+      </fieldset>
 
-  <div class="form-group">
-    <label for="commentaires">Commentaires de l'état des lieux d'entrée :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fa fa-comment"></i></span>
+    <fieldset th:object="${paiement}">
+      <legend>Paiement</legend>
+      <div class="form-group">
+        <label for="dateDDG">Date du paiement du dépôt de garantie</label>
+        <input class="form-control" id="dateDDG" placeholder="Entrez la date de paiement du dépôt de garantie" required autocomplete="off"
+               th:field="*{date}"
+               type="date"/>
       </div>
-      <textarea id="commentaires" name="commentaires" th:text="${commentaires}" class="form-control" required></textarea>
-    </div>
-  </div>
+    </fieldset>
+  -->
 
   <div class="form-group">
     <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
@@ -112,59 +112,51 @@
 
 <div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
 <div th:if="${appartementMessage}" th:utext="${appartementMessage}" class="alert alert-success text-center"></div>
-
-<h2>Paiements</h2>
-
+<!--
 <h3>Ajouter un paiement</h3>
-<form class="col card p-3 my-5" method="post" th:action="@{/ficheLocataire/{locataire_id}/addpaiement(locataire_id=${locataires.get().getLocataire_id()})}">
 
-  <div class="form-group">
-    <label for="appartementu">Appartement:</label>
-    <select class="form-control" id="appartementu" name="appartementu">
-      <option value="">Sélectionnez un appartement</option>
-      <th:block th:each="appartementu : ${appartementP}">
-        <option th:value="${appartementu.getAppartement_id}" th:text="${appartementu.getCodepostal}+ ' ' +${appartementu.getAdresse}"></option>
-      </th:block>
-    </select>
-  </div>
-
+<form class="col card p-3 my-5" method="post" th:action="@{/createPaiement}" th:object="${paiement_new}">
   <div class="form-group">
     <label for="origine">Origine</label>
     <select class="form-control" id="origine" name="origine" required>
       <option value="">Choisissez une option</option>
-      <option value="LOCATAIRE">Locataire</option>
+      <option value="Locataire">Locataire</option>
       <option value="CAF">CAF</option>
     </select>
+  </div>
+
+  <div class="form-group">
+    <label for="montant">Montant</label>
+    <input class="form-control" id="montant" placeholder="Entrez le montant"  autocomplete="off"
+           th:field="*{montant}"
+           type="text"/>
   </div>
 
   <div class="form-group">
     <label for="objet">Objet</label>
     <select class="form-control" id="objet" name="objet" required>
       <option value="">Choisissez une option</option>
-      <option value="LOYER">Loyer</option>
-      <option value="CHARGES">Charges</option>
+      <option value="Dépôt de garantie">Dépôt de garantie</option>
+      <option value="Loyer">Loyer</option>
+      <option value="Charges">Charges</option>
     </select>
   </div>
 
-
   <div class="form-group">
-    <label for="date">Date du paiement :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-      </div>
-      <input type="date" id="date" name="date" th:value="${date}" class="form-control" required />
-    </div>
+    <label for="date">Date</label>
+    <input class="form-control" id="date" placeholder="Entrez la date du paiement" required autocomplete="off"
+           th:field="*{date}"
+           type="date"/>
   </div>
 
   <div class="form-group">
-    <label for="montant">Montant :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i ></i></span>
-      </div>
-      <input type="text" pattern="^[0-9]+$" id="montant" name="date" th:value="${montant}" class="form-control" required />
-    </div>
+    <label for="appartement">Appartement:</label>
+    <select class="form-control" id="appartement2" name="appartement">
+      <option value="">Sélectionnez un appartement</option>
+      <th:block th:each="appartement : ${appartements}">
+        <option th:value="${appartement.getAppartement_id}" th:text="${appartement.getCodepostal}+ ' ' +${appartement.getAdresse}"></option>
+      </th:block>
+    </select>
   </div>
 
   <div>
@@ -172,6 +164,9 @@
     <input class="btn btn-dark" type="reset" value="Reset">
   </div>
 </form>
+
+-->
+
 
 <h3 class="my-5">Modifier les coordonnées du locataire</h3>
 <form class="col card p-3" method="post" th:action="@{/ficheLocataire/{locataire_id}(locataire_id=${locataires.get().getLocataire_id()})}">
@@ -191,7 +186,7 @@
     <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
   </div>
 </form>
-  <div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
+<div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
 <div th:if="${appartementMessage}" th:utext="${appartementMessage}" class="alert alert-success text-center"></div>
 
 <form method="post" th:action="@{/ficheLocataire/delete/{locataire_id}(locataire_id=${locataires.get().getLocataire_id()})}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce locataire et toutes ses informations afférentes ?')">
