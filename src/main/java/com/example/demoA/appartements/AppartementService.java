@@ -56,4 +56,8 @@ public Integer findLocataireIdByAppartementId (Integer appartement_id)
         return  appartementRepository.findDepotdegarantieById(appartement_id);
     }
 
+public Integer getChargesByAppartement (Appartement appartement)
+{
+    return  appartementRepository.findChargesSelonAppartement(appartement);
+}
 }

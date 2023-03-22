@@ -31,6 +31,8 @@ public interface AppartementRepository extends JpaRepository <Appartement,Intege
     Optional<Appartement> findAppartementSelonLocataire(Locataire locataire);
 
 
+    @Query ("SELECT c.charges FROM Appartement c WHERE c.appartement_id=?1")
+    Integer findChargesSelonAppartement(Appartement appartement);
 }
 
 

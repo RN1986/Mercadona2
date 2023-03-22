@@ -4,7 +4,10 @@ import com.example.demoA.etatDesLieux.EtatDesLieux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PaiementService {
     private final PaiementRepository paiementRepository;
@@ -25,6 +28,10 @@ public class PaiementService {
 
     public Paiement creerPaiement(Paiement paiementNew) {
         return paiementRepository.save(paiementNew);
+    }
+
+    public List findByAppartementAndLocataire(Integer appartementId, Integer locataireId) {
+        return paiementRepository.findByAppartementAndLocataire(appartementId, locataireId);
     }
 }
 

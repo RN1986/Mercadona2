@@ -19,7 +19,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+
 
 @Controller
 public class LocataireController {
@@ -93,28 +96,12 @@ public class LocataireController {
         model.addAttribute("locataires", locataires);
         List<Appartement> appartements = appartementService.getAppartementsLibres();
         model.addAttribute("appartements", appartements);
+        model.addAttribute("appartementP", appartementService.getAppartementByLocataire(locataireService.getLocataireSelonId(locataire_id)));
+        model.addAttribute("appartement", new Appartement());
 
         return "ficheLocataire";
     }
-/*
-    //ok
-    @RequestMapping(path = "/ficheLocataire/{locataire_id}", method = RequestMethod.POST)
-    public RedirectView updateLocataire(Model model, @PathVariable("locataire_id") Integer locataire_id, @RequestParam("nom") String nom, @RequestParam("prenom") String prenom, @RequestParam("email") String email,@RequestParam("appartement") Appartement appartement) {
-        RedirectView redirectView = new RedirectView("/ficheLocataire/{locataire_id}", true);
-        model.addAttribute("appartement", appartement);
-        Optional<Locataire> locataires = locataireService.getLocataireById(locataire_id);
-        if (locataires.isPresent()) {
-            Locataire updatedLocataire = locataires.get();
-            updatedLocataire.setNom(nom);
-            updatedLocataire.setPrenom(prenom);
-            updatedLocataire.setEmail(email);
 
-            //updatedLocataire.setAppartement(appartement);
-            locataireService.updateLocataire(updatedLocataire);
-        }
-        return redirectView;
-    }
-*/
     //OK
     @RequestMapping(path = "/ficheLocataire/{locataire_id}", method = RequestMethod.POST)
     public RedirectView updateLocataire(Model model, @PathVariable("locataire_id") Integer locataire_id,
@@ -130,14 +117,6 @@ public class LocataireController {
             updatedLocataire.setPrenom(prenom);
             updatedLocataire.setEmail(email);
 
-          /*  List<Appartement> appartements = appartementService.getAppartements();
-            model.addAttribute("appartements", appartements);
-
-            List <Appartement>  newlistAppart = updatedLocataire.getAppartements();
-
-            newlistAppart.add(appartementService.findselonId(appartement.getAppartement_id()));
-            updatedLocataire.setAppartements(newlistAppart);
-*/
             locataireService.updateLocataire(updatedLocataire);
             model.addAttribute("locataireMessage", "Les modifications ont été enregistrées avec succès.");
         } else {
@@ -220,36 +199,37 @@ public class LocataireController {
 
         return redirectView;
     }
-
+/*
     //ok
     @RequestMapping(path = "/ficheLocataire/{locataire_id}/addpaiement", method = RequestMethod.GET)
     public String addPaiement(Model model, @PathVariable("locataire_id") Integer locataire_id) {
-        model.addAttribute("appartementP", appartementService.getAppartementByLocataire(locataireService.getLocataireSelonId(locataire_id)));
 
         model.addAttribute("paiement_new", new Paiement());
 
         return "ficheLocataire";
     }
-
+//ok
     @RequestMapping(path = "/ficheLocataire/{locataire_id}/addpaiement", method = RequestMethod.POST)
     public RedirectView addPaiement(Model model, @PathVariable("locataire_id") Integer locataire_id,
                                        @ModelAttribute("paiement_new") Paiement paiement,
                                        @ModelAttribute("date") String dateStr, @ModelAttribute("origine") String origine,
-                                    @ModelAttribute("objet") String objet,@ModelAttribute("montant") Integer montant
+                                    @ModelAttribute("objet") String objet,@ModelAttribute("appartementu") Appartement appartementu
                                        ) {
         LocalDate date = LocalDate.parse(dateStr);
         RedirectView redirectView = new RedirectView("/ficheLocataire/{locataire_id}", true);
-
-       // model.addAttribute("appartementP", appartementService.getAppartementByLocataire(locataireService.getLocataireSelonId(locataire_id)));
-
         Optional<Locataire> locataire = locataireService.getLocataireById(locataire_id);
         if (locataire.isPresent()) {
             Locataire updatedLocataire = locataire.get();
 
+            paiement.setAppartement(appartementu);
             paiement.setOrigine(PaiementOrigine.valueOf(origine));
-            paiement.setMontant(montant);
+
+            if (Objects.equals(objet, "CHARGES")) paiement.setMontant(appartementu.getCharges());
+            else if (Objects.equals(objet, "LOYER")) paiement.setMontant(appartementu.getLoyer());
+
             paiement.setObjet(PaiementObjet.valueOf(objet));
             paiement.setDate(date);
+
             paiementService.creerPaiement(paiement);
             List<Paiement> newlistPaiement = updatedLocataire.getPaiement();
             newlistPaiement.add(paiement);
@@ -264,6 +244,68 @@ public class LocataireController {
         return redirectView;
     }
 }
+*/
+
+
+    @RequestMapping(path = "/ficheLocataire/{locataire_id}/appartement/{appartement_id}/paiements", method = RequestMethod.GET)
+    public String Paiement(Model model, @PathVariable("locataire_id") Integer locataire_id,@PathVariable("appartement_id") Integer appartement_id,
+                           @ModelAttribute("appartement") Appartement appartement,@ModelAttribute("paiement") Paiement paiement ) {
+        //Paiement paiement;
+List paiements = paiementService.findByAppartementAndLocataire(appartement_id,locataire_id);
+        model.addAttribute("paiements", paiements);
+        model.addAttribute("paiement", paiement);
+        model.addAttribute("paiement_new", new Paiement());
+        appartement = appartementService.findselonId(appartement_id);
+        model.addAttribute("appartement", appartement);
+       Locataire locataire = locataireService.getLocataireSelonId(locataire_id);
+        model.addAttribute("locataire", locataire);
+        return "CreerPaiement";
+    }
+
+    @RequestMapping(path = "/ficheLocataire/{locataire_id}/appartement/{appartement_id}/paiements/add", method = RequestMethod.POST)
+    public RedirectView addPaiement(Model model, @PathVariable("appartement_id") Integer appartement_id,@PathVariable("locataire_id") Integer locataire_id,
+                                    @ModelAttribute("paiement_new") Paiement paiement,
+                                    @ModelAttribute("date") String dateStr, @ModelAttribute("origine") String origine,
+                                    @ModelAttribute("objet") String objet,@ModelAttribute("appartement") Appartement appartement
+    ) {
+
+        appartement = appartementService.findselonId(appartement_id);
+        LocalDate date = LocalDate.parse(dateStr);
+        RedirectView redirectView = new RedirectView("/ficheLocataire/{locataire_id}/appartement/{appartement_id}/paiements", true);
+        Optional<Locataire> locataire = locataireService.getLocataireById(locataire_id);
+        if (locataire.isPresent()) {
+            Locataire updatedLocataire = locataire.get();
+
+            paiement.setAppartement(appartement);
+            paiement.setOrigine(PaiementOrigine.valueOf(origine));
+
+           if (Objects.equals(objet, "CHARGES")) paiement.setMontant(appartement.getCharges());
+            else if (Objects.equals(objet, "LOYER")) paiement.setMontant(appartement.getLoyer());
+
+            paiement.setObjet(PaiementObjet.valueOf(objet));
+            paiement.setDate(date);
+
+            paiementService.creerPaiement(paiement);
+            List<Paiement> newlistPaiement = updatedLocataire.getPaiement();
+            newlistPaiement.add(paiement);
+            updatedLocataire.setPaiement(newlistPaiement);
+
+            locataireService.updateLocataire(updatedLocataire);
+            model.addAttribute("locataireMessage", "Les modifications ont été enregistrées avec succès.");
+        } else {
+            model.addAttribute("locataireMessage", "Impossible d'ajouter l'appartement. Veuillez réessayer.");
+        }
+
+        return redirectView;
+    }
+}
+
+
+
+
+
+
+
 /*
     //Supprimer un locataire
 
