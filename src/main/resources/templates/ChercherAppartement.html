@@ -50,9 +50,9 @@
     <td class="align-middle" th:text="${appartement != null ? appartement.adresse : ''}"></td>
     <td class="align-middle" th:text="${appartement != null ? appartement.complement : ''}"></td>
     <td class="align-middle" th:text="${appartement != null ? appartement.codepostal : ''}"></td>
-    <td class="align-middle" th:text="${appartement != null ? appartement.loyer : ''}"></td>
-    <td class="align-middle" th:text="${appartement != null ? appartement.charges : ''}"></td>
-    <td class="align-middle" th:text="${appartement != null ? appartement.depotdegarantie : ''}"></td>
+    <td class="align-middle" th:text="${appartement != null ? appartement.loyer : ''} + ' €'"></td>
+    <td class="align-middle" th:text="${appartement != null ? appartement.charges : ''} + ' €'"></td>
+    <td class="align-middle" th:text="${appartement != null ? appartement.depotdegarantie : ''} + ' €'"></td>
     <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/ficheAppartement/' + ${appartement.appartement_id}">✏</a>
 

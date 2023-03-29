@@ -32,21 +32,11 @@
   <th th:text="${appartement.getAdresse()}"></th>
   <th th:text="${appartement.getComplement()}"></th>
   <th th:text="${appartement.getCodepostal()}"></th>
-  <th th:text="${appartement.getLoyer()}"></th>
-  <th th:text="${appartement.getCharges()}"></th>
-  <th th:text="${appartement.getDepotdegarantie()}"></th>
+  <th th:text="${appartement.getLoyer()} + ' €'"></th>
+  <th th:text="${appartement.getCharges()} + ' €'"></th>
+  <th th:text="${appartement.getDepotdegarantie()} + ' €'"></th>
   </tr>
   </tbody>
-<!--
-  <tr th:each="appartement : ${appartements}">
-    <td th:text="${appartement.get().appartement_id}"></td>
-    <td th:text="${appartement.get().adresse}"></td>
-    <td th:text="${appartement.get().complement}"></td>
-    <td th:text="${appartement.get().codepostal}"></td>
-    <td th:text="${appartement.get().loyer}"></td>
-    <td th:text="${appartement.get().charges}"></td>
-    <td th:text="${appartement.get().depotdegarantie}"></td>
--->
 
 </table>
   <div th:if="${AppartementMessage}" th:utext="${AppartementMessage}" class="alert alert-success text-center"></div>
@@ -59,6 +49,7 @@
     <th>ID</th>
     <th>Nom</th>
     <th>Prénom</th>
+    <th>Voir</th>
   </tr>
   </thead>
 
@@ -67,6 +58,9 @@
     <td th:text="${locataire.getLocataire_id()}"></td>
    <td th:text="${locataire.getNom()}"></td>
    <td th:text="${locataire.getPrenom()}"></td>
+   <td class="align-middle text-center">
+     <a class="btn btn-secondary" th:href="'/ficheLocataire/'+${locataire.getLocataire_id()}">X</a>
+
  </tr>
 
   </tbody>
@@ -113,46 +107,6 @@
     <input class="btn btn-danger" type="submit" value="Supprimer l'appartement" />
   </div>
 </form>
--->
-<!--
 
-<h3 class="my-5">Modifier les informations de l'appartement</h3>
-<form class="col card p-3" method="post" th:action="@{/ficheAppartement/{appartement_id}(appartement_id=${appartements.get().getAppartement_id()})}">
-  <div class="form-group">
-    <label for="adresse">Nom:</label>
-    <input class="form-control" id="adresse" name="adresse" th:value="${appartements.get().getAdresse()}" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="complement">Complément:</label>
-    <input class="form-control" id="complement" name="complement" th:value="${appartements.get().getComplement()}" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="codepostal">Code postal:</label>
-    <input class="form-control" id="codepostal" name="codepostal" th:value="${appartements.get().getCodepostal()}" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="loyer">Loyer:</label>
-    <input class="form-control" id="loyer" name="loyer" th:value="${appartements.get().getLoyer()}" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="charges">Charges:</label>
-    <input class="form-control" id="charges" name="charges" th:value="${appartements.get().getCharges()}" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="depotdegarantie">Dépôt de garantie:</label>
-    <input class="form-control" id="depotdegarantie" name="depotdegarantie" th:value="${appartements.get().getDepotdegarantie()}" type="text" />
-  </div>
-  <div class="form-group">
-    <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
-  </div>
-</form>
-
-<form method="post" th:action="@{/ficheAppartement/delete/{appartement_id}(appartement_id=${appartements.get().getAppartement_id()})}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cet appartement et toutes ses informations afférentes ?')">
-  <input type="hidden" name="appartement_id" th:value="${appartements.get().getAppartement_id()}" />
-  <div class="form-group">
-    <input class="btn btn-danger" type="submit" value="Supprimer l'appartement" />
-  </div>
-</form>
--->
 </body>
 </html>

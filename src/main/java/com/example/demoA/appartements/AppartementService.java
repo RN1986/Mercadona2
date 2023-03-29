@@ -33,7 +33,7 @@ public class AppartementService {
         return appartementRepository.findAppartementById(appartementId);
     }
 
-    public Optional<Appartement> getAppartementByLocataire(Locataire locataire) {
+    public List<Appartement> getAppartementByLocataire(Locataire locataire) {
         return appartementRepository.findAppartementSelonLocataire(locataire);
     }
 
@@ -60,4 +60,5 @@ public Integer getChargesByAppartement (Appartement appartement)
 {
     return  appartementRepository.findChargesSelonAppartement(appartement);
 }
+
 }

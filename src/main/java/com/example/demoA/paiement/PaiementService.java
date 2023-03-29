@@ -33,6 +33,24 @@ public class PaiementService {
     public List findByAppartementAndLocataire(Integer appartementId, Integer locataireId) {
         return paiementRepository.findByAppartementAndLocataire(appartementId, locataireId);
     }
+
+    public Object getById(Integer paiement_id) {
+        return  paiementRepository.findById(paiement_id);
+    }
+
+    public void updatePaiement(Paiement updatedpaiement) { paiementRepository.save(updatedpaiement);    }
+
+    public void deletePaiement(Paiement deletedpaiement) {paiementRepository.delete(deletedpaiement);
+    }
+
+    public PaiementOrigine getOrigineSelonID(Integer paiement_id) {
+        return paiementRepository.findOrigineSelonId(paiement_id) ;
+
+    }
+
+    public PaiementObjet getObjetSelonID(Integer paiement_id) {
+        return paiementRepository.findObjetSelonId(paiement_id);
+    }
 }
 
 

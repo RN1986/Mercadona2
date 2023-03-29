@@ -28,11 +28,12 @@ public interface AppartementRepository extends JpaRepository <Appartement,Intege
     Integer findDepotdegarantieById (Integer appartement_id);
 
     @Query ("SELECT s FROM Appartement s WHERE s.locataire=?1")
-    Optional<Appartement> findAppartementSelonLocataire(Locataire locataire);
+    List<Appartement> findAppartementSelonLocataire(Locataire locataire);
 
 
     @Query ("SELECT c.charges FROM Appartement c WHERE c.appartement_id=?1")
     Integer findChargesSelonAppartement(Appartement appartement);
+
 }
 
 

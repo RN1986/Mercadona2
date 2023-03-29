@@ -44,7 +44,9 @@
     <th>Loyer</th>
     <th>Charges</th>
     <th>Dépôt de garantie</th>
+    <th>Solde (mois)</th>
     <th>Paiements</th>
+    <th>Etats des lieux</th>
     <th>Sortie</th>
   </tr>
   </thead>
@@ -55,14 +57,25 @@
     <td th:text="${appartement.getAdresse}"></td>
     <td th:text="${appartement.getComplement}"></td>
     <td th:text="${appartement.getCodepostal}"></td>
-    <td th:text="${appartement.getLoyer}"></td>
-    <td th:text="${appartement.getCharges}"></td>
-    <td th:text="${appartement.getDepotdegarantie}"></td>
+    <td th:text="${appartement.getLoyer} + ' €'"></td>
+    <td th:text="${appartement.getCharges} + ' €'"></td>
+    <td th:text="${appartement.getDepotdegarantie} + ' €'"></td>
+
+    <td th:if="${appartement != null}" th:text="${locataireService.SoldeLoyer(locataire.getLocataire_id(), appartement.getAppartement_id())}" th:classappend="${locataireService.SoldeLoyer(locataire.getLocataire_id(), appartement.getAppartement_id()) < 0 ? 'text-danger' : ''}"></td>
+
+    <!--
+        <td   th:text="${locataireService.SoldeLoyer(locataire_id,appartement.getAppartement_id)}"></td>
+      -->
     <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/ficheLocataire/'+${locataires.get().getLocataire_id()} +'/appartement/'+ ${appartement.appartement_id} +'/paiements'">X</a>
     <td class="align-middle text-center">
+      <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/ficheLocataire/'+${locataires.get().getLocataire_id()} +'/appartement/'+ ${appartement.appartement_id} +'/etatsdeslieux'">X</a>
+
+
+    <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/sortie/' + ${appartement.appartement_id}">X</a>
   </tr>
+
   </tr>
   </tbody>
 </table>
@@ -117,71 +130,6 @@
 
 <div th:if="${locataireMessage}" th:utext="${locataireMessage}" class="alert alert-success text-center"></div>
 <div th:if="${appartementMessage}" th:utext="${appartementMessage}" class="alert alert-success text-center"></div>
-
-<h2>Paiements</h2>
-
-<h3>Ajouter un paiement</h3>
-
-<form class="col card p-3 my-5" method="post" th:action="@{/ficheLocataire/{locataire_id}/addpaiement(locataire_id=${locataires.get().getLocataire_id()})}">
-
-  <div class="form-group">
-    <label for="appartementu">Appartement:</label>
-    <select class="form-control" id="appartementu" name="appartementu">
-      <option value="">Sélectionnez un appartement</option>
-      <th:block th:if="${appartementP.isPresent()}">
-        <option th:value="${appartementP.get().getAppartement_id()}" th:text="${appartementP.get().getCodepostal()} + ' ' + ${appartementP.get().getAdresse()} + ' (Loyer : ' + ${appartementP.get().getLoyer()} + '€ / Charges : ' + ${appartementP.get().getCharges()} + '€ )'"></option>
-      </th:block>
-      <th:block th:unless="${appartementP.isPresent()}">
-        <option value="">Aucun appartement trouvé</option>
-      </th:block>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="origine">Origine</label>
-    <select class="form-control" id="origine" name="origine" required>
-      <option value="">Choisissez une option</option>
-      <option value="LOCATAIRE">Locataire</option>
-      <option value="CAF">CAF</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="objet">Objet</label>
-    <select class="form-control" id="objet" name="objet" required>
-      <option value="">Choisissez une option</option>
-      <option value="LOYER">Loyer</option>
-      <option value="CHARGES">Charges</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="date">Date du paiement :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-      </div>
-      <input type="date" id="date" name="date" th:value="${date}" class="form-control" required />
-    </div>
-  </div>
-<!--
-  <div class="form-group">
-    <label for="montant">Montant :</label>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i ></i></span>
-      </div>
-      <input type="text" pattern="^[0-9]+$" id="montant" name="date" th:value="${montant}" class="form-control" required />
-    </div>
-  </div>
--->
-  <div>
-    <input class="btn btn-primary" type="submit" value="Ajouter un paiement">
-    <input class="btn btn-dark" type="reset" value="Reset">
-  </div>
-</form>
-
-
 
 <h3 class="my-5">Modifier les coordonnées du locataire</h3>
 <form class="col card p-3" method="post" th:action="@{/ficheLocataire/{locataire_id}(locataire_id=${locataires.get().getLocataire_id()})}">

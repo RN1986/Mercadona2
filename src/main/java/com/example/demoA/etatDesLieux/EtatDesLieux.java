@@ -1,5 +1,6 @@
 package com.example.demoA.etatDesLieux;
 
+import com.example.demoA.appartements.Appartement;
 import com.example.demoA.locataires.Locataire;
 import lombok.Data;
 import lombok.Getter;
@@ -28,6 +29,9 @@ public class EtatDesLieux {
     @JoinColumn(name = "locataire_id")
     private Locataire locataire;
 
+    @ManyToOne
+    @JoinColumn(name = "appartement_id")
+    private Appartement appartement;
 
     public EtatDesLieux() {
     }
@@ -76,5 +80,13 @@ public class EtatDesLieux {
 
     public void setLocataire(Locataire locataire) {
         this.locataire = locataire;
+    }
+
+    public Appartement getAppartement() {
+        return appartement;
+    }
+
+    public void setAppartement(Appartement appartement) {
+        this.appartement = appartement;
     }
 }

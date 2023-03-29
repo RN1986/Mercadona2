@@ -16,6 +16,14 @@ public interface PaiementRepository extends JpaRepository<Paiement,Integer> {
 
     @Query("SELECT p FROM Paiement p WHERE p.appartement.appartement_id = ?1 AND p.appartement.locataire.locataire_id = ?2")
     List<Paiement> findByAppartementAndLocataire(Integer appartement_id, Integer locataire_id);
+    @Query("SELECT p.origine FROM Paiement p WHERE p.paiement_id= ?1")
+    PaiementOrigine findOrigineSelonId(Integer paiement_id);
+    @Query("SELECT p.objet FROM Paiement p WHERE p.paiement_id= ?1")
+    PaiementObjet findObjetSelonId(Integer paiement_id);
+    @Query("SELECT COUNT(p) FROM Paiement p WHERE p.objet = 'LOYER' AND p.appartement.locataire.locataire_id = ?1 AND p.appartement.appartement_id = ?2")
+    Integer nbpaiementsLoyer(Integer locataire_id, Integer appartement_id);
 
+    @Query("SELECT COUNT(p) FROM Paiement p WHERE p.objet = 'CHARGES' AND p.appartement.locataire.locataire_id=?1 AND p.appartement.appartement_id=?2")
+    Integer nbpaiementsCharges(Integer locataire_id,Integer appartement_id);
 }
 

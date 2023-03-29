@@ -85,9 +85,9 @@
     <td class="align-middle" th:text="${appartement.adresse}"></td>
     <td class="align-middle" th:text="${appartement.complement}"></td>
     <td class="align-middle" th:text="${appartement.codepostal}"></td>
-    <td class="align-middle" th:text="${appartement.loyer}"></td>
-    <td class="align-middle" th:text="${appartement.charges}"></td>
-    <td class="align-middle" th:text="${appartement.depotdegarantie}"></td>
+    <td class="align-middle" th:text="${appartement.loyer} + ' €'"></td>
+    <td class="align-middle" th:text="${appartement.charges} + ' €'"></td>
+    <td class="align-middle" th:text="${appartement.depotdegarantie} + ' €'"></td>
      <td class="align-middle text-center"><a class="btn btn-secondary" th:href="'/ficheAppartement/' + ${appartement.appartement_id}">✏</a></td>
   </tr>
 </table>
