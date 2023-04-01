@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>demoA</artifactId>
+	<artifactId>Infeco</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>demoA</name>
 	<description>Demo project for Spring Boot</description>
@@ -53,7 +53,7 @@
 		</dependency>
         <dependency>
             <groupId>com.github.houbb</groupId>
-            <artifactId>valid</artifactId>
+            <artifactId>valid-api</artifactId>
             <version>0.3.0</version>
         </dependency>
         <dependency>
@@ -69,7 +69,24 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>ftp-rnd.alwaysdata.net</id>
 
+			</repository>
+	</distributionManagement>
 </project>
