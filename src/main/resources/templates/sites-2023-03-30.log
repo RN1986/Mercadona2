@@ -1,0 +1,10 @@
+[30/Mar/2023:21:34:45 +0200] [upstream] Upstream starting: ~/myapp/app (env: {'HOME': '/home/rnd', 'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8', 'PATH': '/home/rnd/.local/bin:/home/rnd/.local/share/gem/ruby/3.1.0/bin:/home/rnd/.gem/ruby/3.1.0/bin:/home/rnd/.composer/vendor/bin:/home/rnd/.npm-packages/bin:/usr/local/bin:/usr/bin:/bin', 'TMPDIR': '/home/rnd/admin/tmp', 'PORT': '8100', 'IP': 'fd00::4:acc0'}, cwd: /home/rnd/)
+[30/Mar/2023:21:34:45 +0200] [upstream] Upstream started PID: 1031257
+[30/Mar/2023:21:34:45 +0200] [upstream] Upstream starting failed: ~/myapp/app (return code: 127 | reason: -)
+[30/Mar/2023:21:34:45 +0200] [upstream] Upstream ~/myapp/app previously failed to start, will not start again until 21:43:17
+[30/Mar/2023:21:41:35 +0200] [upstream] Upstream ~/myapp/app previously failed to start, will not start again until 21:43:17
+[30/Mar/2023:21:48:22 +0200] [upstream] Upstream starting: ~/myapp/app (env: {'HOME': '/home/rnd', 'LANG': 'en_US.UTF-8', 'LC_ALL': 'en_US.UTF-8', 'PATH': '/home/rnd/.local/bin:/home/rnd/.local/share/gem/ruby/3.1.0/bin:/home/rnd/.gem/ruby/3.1.0/bin:/home/rnd/.composer/vendor/bin:/home/rnd/.npm-packages/bin:/usr/local/bin:/usr/bin:/bin', 'TMPDIR': '/home/rnd/admin/tmp', 'PORT': '8100', 'IP': 'fd00::4:acc0'}, cwd: /home/rnd/)
+[30/Mar/2023:21:48:22 +0200] [upstream] Upstream started PID: 1106754
+[30/Mar/2023:21:48:22 +0200] [upstream] [1106754] STDERR: /bin/sh: 1: exec: /home/rnd/myapp/app: not found
+[30/Mar/2023:21:48:22 +0200] [upstream] Upstream starting failed: ~/myapp/app (return code: 127 | reason: -)
+[30/Mar/2023:21:48:22 +0200] [upstream] Upstream ~/myapp/app previously failed to start, will not start again until 22:05:26
