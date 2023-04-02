@@ -80,8 +80,17 @@
                         <goals><goal>copy-dependencies</goal></goals>
                     </execution>
                 </executions>
-            </plugin>
-		</plugins>
+			</plugin>
+			<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.10.1</version>
+            <configuration>
+                <target>19</target>
+                <source>19</source>
+            </configuration>
+      			</plugin>
+	</plugins>
 	</build>
 	<distributionManagement>
 		<repository>
