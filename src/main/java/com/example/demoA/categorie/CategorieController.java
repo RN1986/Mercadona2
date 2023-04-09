@@ -1,40 +1,24 @@
-package com.example.demoA.paiement;
+package com.example.demoA.categorie;
 
-import com.example.demoA.appartements.Appartement;
-import com.example.demoA.appartements.AppartementService;
-import com.example.demoA.etatDesLieux.EtatDesLieuxService;
-import com.example.demoA.locataires.Locataire;
-import com.example.demoA.locataires.LocataireService;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import com.example.demoA.produit.ProduitService;
+import com.example.demoA.promotion.PromotionService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
 
 
 @Controller
-public class PaiementController {
-    private final LocataireService locataireService;
-    private final AppartementService appartementService;
-    private final PaiementService paiementService;
-    private final EtatDesLieuxService etatDesLieuxService;
+public class CategorieController {
+    private final ProduitService produitService;
+    private final PromotionService promotionService;
+    private final CategorieService categorieService;
 
-    public PaiementController(LocataireService locataireService, AppartementService appartementService, PaiementService paiementService, EtatDesLieuxService etatDesLieuxService) {
-        this.locataireService = locataireService;
-        this.appartementService = appartementService;
-        this.paiementService = paiementService;
-        this.etatDesLieuxService = etatDesLieuxService;
+    public CategorieController(ProduitService produitService, PromotionService promotionService, CategorieService categorieService) {
+        this.produitService = produitService;
+        this.promotionService = promotionService;
+        this.categorieService = categorieService;
     }
 
+/*
     //Créer Paiements
     @RequestMapping(path = "/createPaiement", method = RequestMethod.GET)
     public String getPaiementsCreated(Model model) {

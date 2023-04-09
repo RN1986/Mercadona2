@@ -42,9 +42,9 @@
            type="text"/>
   </div>
   <div class="form-group">
-    <label for="loyer">Loyer</label>
-    <input class="form-control" id="loyer" placeholder="Entrez le montant du loyer" required autocomplete="off"
-           th:field="*{loyer}"
+    <label for="loyer.montant">Loyer</label>
+    <input class="form-control" id="loyer.montant" placeholder="Entrez le montant du loyer" required autocomplete="off"
+           th:field="*{loyer.montant}"
            type="text"/>
   </div>
   <div class="form-group">
@@ -64,7 +64,7 @@
     <input class="btn btn-dark" type="reset" value="Reset">
   </div>
 </form>
-
+<!--
 <div th:if="${appartementMessage}" th:utext="${appartementMessage}" class="alert alert-success text-center"></div>
 <table class="table table-striped table-bordered " method="get" th:action="@{/}" th:object="${appartements}">
   <tr>
@@ -91,5 +91,6 @@
      <td class="align-middle text-center"><a class="btn btn-secondary" th:href="'/ficheAppartement/' + ${appartement.appartement_id}">✏</a></td>
   </tr>
 </table>
+-->
 </body>
 </html>

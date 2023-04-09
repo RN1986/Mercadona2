@@ -53,6 +53,8 @@
   </tr>
   </thead>
   <tbody>
+  <tr th:if="${#lists.isEmpty(locataires.get().getAppartements())}">
+    <td class="text-center" colspan="7">Aucun appartement enregistré pour ce locataire</td>
   <tr th:each="locataire : ${locataires}">
   <tr th:each="appartement : ${locataires.get().getAppartements()}">
     <td th:text="${appartement.getAppartement_id}"></td>
@@ -62,14 +64,11 @@
     <td th:text="${appartement.getLoyer} + ' €'"></td>
     <td th:text="${appartement.getCharges} + ' €'"></td>
     <td th:text="${appartement.getDepotdegarantie} + ' €'"></td>
-
     <td th:if="${appartement != null}" th:text="${locataireService.SoldeLoyer(locataire.getLocataire_id(), appartement.getAppartement_id())}" th:classappend="${locataireService.SoldeLoyer(locataire.getLocataire_id(), appartement.getAppartement_id()) < 0 ? 'text-danger' : ''}"></td>
-
     <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/ficheLocataire/'+${locataires.get().getLocataire_id()} +'/appartement/'+ ${appartement.appartement_id} +'/paiements'">X</a>
     <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/ficheLocataire/'+${locataires.get().getLocataire_id()} +'/appartement/'+ ${appartement.appartement_id} +'/etatsdeslieux'">X</a>
-
     <td class="align-middle text-center">
       <a class="btn btn-secondary" th:if="${appartement != null}" th:href="'/sortie/' + ${appartement.appartement_id}">X</a>
   </tr>
