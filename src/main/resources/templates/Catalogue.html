@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Accueil</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css">
+</head>
+<body class="container">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">Mercadona</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Catalogue</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/administration">Administration</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<h1 class="text-center">Mercadona</h1>
+<br>
+
+<table id="example" class="table table-striped table-bordered text-center">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Nom</th>
+    <th>Catégorie</th>
+    <th>Image</th>
+    <th>Description</th>
+    <th>Prix en cours</th>
+    <th>Promotion</th>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr th:each="produit: ${produits}">
+    <td th:text="${produit.id}"></td>
+    <td th:text="${produit.libelle}"></td>
+    <td th:text="${produit.categorie.libelle}"></td>
+    <td><img th:src="@{${'/image/display/'+ produit.id}}" class="card img-fluid" style="width:300px" alt=""></td>
+    <td th:text="${produit.description}"></td>
+
+        <td th:if="${produit.promotion != null and produit.promotion.datedebut <= T(java.time.LocalDate).now() and produit.promotion.datefin >= T(java.time.LocalDate).now()}" th:classappend="'promo'" th:text="${produitService.calculerPrixEnCours(produit)}+' €'"></td>
+
+            <td th:if="${produit.promotion == null}" th:text="${produitService.calculerPrixEnCours(produit)}+' €'"></td>
+
+        <td th:if="${produit.promotion != null}" th:text="'Promotion de ' + ${#numbers.formatDecimal((produit.promotion.remise),2,0)} + '% jusqu\'au ' + ${#temporals.format(produit.promotion.datefin, 'dd/MM/yyyy')}"></td>
+        <td th:if="${produit.promotion == null}" th:text="''"></td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!--
+    <table id="example" class="table table-striped table-bordered text-center">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Catégorie</th>
+        <th>Image</th>
+        <th>Description</th>
+        <th>Prix</th>
+        <th>Promotion</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody th:with="count=0">
+      <tr th:each="produit, hh : ${produits}">
+        <td th:text="${produit.id}"></td>
+        <td th:text="${produit.libelle}"></td>
+        <td th:text="${produit.categorie.libelle}"></td>
+        <td><img th:src="@{${'/image/display/'+ produit.id}}" class="card img-fluid" style="width:300px" alt=""></td>
+        <td th:text="${produit.description}"></td>
+        <td th:if="${produit.promotion != null and produit.promotion.datedebut <= T(java.time.LocalDate).now() and produit.promotion.datefin >= T(java.time.LocalDate).now()}" th:classappend="'promo'" th:text="${produit.prix-produit.prix*produit.promotion.remise}+' €'"></td>
+        <td th:if="${produit.promotion == null}" th:text="${produit.prix}+' €'"></td>
+        <td th:if="${produit.promotion != null}" th:text="'Promotion de ' + ${#numbers.formatDecimal((produit.promotion.remise)*100,2,0)} + '% jusqu\'au ' + ${#temporals.format(produit.promotion.datefin, 'dd/MM/yyyy')}"></td>
+        <td th:if="${produit.promotion == null}" th:text="''"></td>
+        <td><a th:href="@{/image/imageDetails(id=${produit.id})}" class="btn btn-info text-right" target="_blank">Détails</a></td>
+      </tr>
+      </tbody>
+    </table>
+    -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+      $('#example').DataTable();
+  } );
+</script>
+</body>
+</html>

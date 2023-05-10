@@ -1,4 +1,4 @@
-package com.example.demoA.promotion;
+package com.example.demoA.Promotion;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

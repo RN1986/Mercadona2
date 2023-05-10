@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>Mercadona</artifactId>
+	<artifactId>Gallery</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>demoA</name>
 	<description>Demo project for Spring Boot</description>
@@ -63,7 +63,13 @@
             <artifactId>lixbox-param-client</artifactId>
             <version>11.1.2.24</version>
         </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>5.7.7</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -82,6 +88,14 @@
                         <goals><goal>copy-dependencies</goal></goals>
                     </execution>
                 </executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>11</source>
+					<target>11</target>
+				</configuration>
 			</plugin>
 			<!--
 			    <plugin>

@@ -1,9 +1,8 @@
-package com.example.demoA.promotion;
+package com.example.demoA.Promotion;
 
 
-import com.example.demoA.categorie.CategorieService;
-import com.example.demoA.produit.ProduitService;
-import com.example.demoA.promotion.PromotionService;
+import com.example.demoA.Categorie.CategorieService;
+import com.example.demoA.Produit.ProduitService;
 import org.springframework.stereotype.Controller;
 
 

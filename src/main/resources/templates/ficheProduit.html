@@ -1,0 +1,136 @@
+<!doctype html >
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <title>Thymeleaf Form handling Demo</title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
+        rel="stylesheet">
+</head>
+<body class="container">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">Mercadona</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Catalogue</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/administration">Administration<span class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<h1>Fiche Produit</h1>
+
+<table class="table table-striped table-bordered" method="get" th:action="@{/administration/produit/{id}}" th:object="${produit}">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Libellé</th>
+    <th>Description</th>
+    <th>Prix de base</th>
+    <th>Catégorie</th>
+    <th>Promotion en cours</th>
+    <th>Prix en cours</th>
+    <th>Image</th>
+  </tr>
+  </thead>
+  <tbody>
+    <td th:text="${produit.id}"></td>
+    <td th:text="${produit.libelle}"></td>
+    <td th:text="${produit.description}"></td>
+    <td th:text="${produit.prixDeBase}+' €'"></td>
+    <td th:text="${produit.categorie.libelle}"></td>
+    <td th:text="${produit.promotion != null ? produit.promotion.remise+' % du '+ #temporals.format(produit.promotion.datedebut, 'dd/MM/yyyy')+' au '+#temporals.format(produit.promotion.datefin, 'dd/MM/yyyy') : ''}"></td>
+    <td th:text="${produitService.calculerPrixEnCours(produit)+' €'}"></td>
+    <td class="align-middle text-center">
+    <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}"  alt="Image du produit" type="image/jpeg"/>
+  </tbody>
+</table>
+</form>
+
+<h4 class="my-5">Appliquer une promotion</h4>
+<form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}+'/promotion'}" th:object="${promoProduit}">
+  <div class="form-group">
+    <label for="datedebut">Promotion : date de début</label>
+    <input class="form-control" id="datedebut" name="datedebut" type="date" />
+  </div>
+  <div class="form-group">
+    <label for="datefin">Promotion : date de fin</label>
+    <input class="form-control" id="datefin" name="datefin"  type="date" />
+  </div>
+  <div class="form-group">
+    <label for="remise">Promotion : remise (%)</label>
+    <input class="form-control" id="remise" name="remise" type="number" />
+  </div>
+  <!--
+  <div class="form-group">
+    <label for="image">Image</label>
+    <input class="form-control" id="image" name="image" th:value="${updatedProduit.image}" type="image" />
+  </div>
+  -->
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="Appliquer la promotion" />
+  </div>
+</form>
+<div th:if="${produitMessage}" th:utext="${produitMessage}" class="alert alert-success text-center"></div>
+
+<h4 class="my-5">Modifier les informations du produit</h4>
+<form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}}" th:object="${updatedProduit}">
+  <div class="form-group">
+    <label for="libelle">Libellé</label>
+    <input class="form-control" id="libelle" name="libelle" th:value="${updatedProduit.libelle}" type="text" />
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" th:value="${updatedProduit.description}"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="prixDeBase">Prix de base (€)</label>
+    <input class="form-control" id="prixDeBase" name="prixDeBase" th:value="${updatedProduit.prixDeBase}" type="text" pattern="[0-9]+([,\.][0-9]+)?" />
+  </div>
+
+  <!--
+  <div class="form-group">
+    <label for="categorie">Catégorie</label>
+    <input class="form-control" id="categorie" name="categorie" th:value="${updatedProduit.categorie.libelle}" type="text" />
+  </div>
+-->
+  <div class="form-group">
+    <label for="categorie">Catégorie</label>
+    <select class="form-control" id="categorie" name="categorie">
+      <option th:text="${updatedProduit.categorie.getLibelle}">Sélectionnez une catégorie</option>
+      <th:block th:each="categorie : ${categories}">
+        <option th:value="${categorie.getIdcategorie}" th:text="${categorie.getLibelle}"></option>
+      </th:block>
+    </select>
+  </div>
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
+  </div>
+</form>
+
+
+<form method="post" th:action="@{'/administration/produit/'+${id}/supprimer}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ?')">
+  <input type="hidden" name="produit" id="produit" th:value="${produit.id}" />
+  <div class="form-group">
+    <input class="btn btn-danger" type="submit" value="Supprimer le produit" />
+  </div>
+</form>
+
+
+</body>
+</html>
