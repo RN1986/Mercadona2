@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
-
+//vérifie si l'utilisateur est authentifié avant de laisser passer la requête vers le contrôleur approprié
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();

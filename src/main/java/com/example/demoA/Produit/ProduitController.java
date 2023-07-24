@@ -33,7 +33,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
 
 @Controller
 public class ProduitController {
@@ -62,7 +65,7 @@ private final AdministrateursService administrateursService;
 		this.produitRepository = produitRepository;
 		this.categorieRepository = categorieRepository;
 	}
-
+// Affiche la page Catalogue
 	@GetMapping("/")
 	public String catalogue(Model model) {
 
@@ -71,20 +74,11 @@ private final AdministrateursService administrateursService;
 		model.addAttribute("produitService",produitService);
 		return "Catalogue";
 	}
-
+// Affiche la page d'authentification pour accéder à l'espace d'administration
 	@GetMapping(value = {"/administrationauthentification"})
 	public String AuthentificationAdministrationGET(){
 		return "authentification";
 	}
-/*
-	@PostMapping(value = {"/administrationauthentification"})
-	public String AuthentificationAdministration(@RequestParam(value = "user") String user,@RequestParam(value = "password") String password, Model model ) {
-		//passwordsInit();
-	//	if (passwords.get(user).equals(password)){
-			return "AccueilAdministration";
-	}
-*/
-
 
 	Map<String, String> passwords = new HashMap(); //Contient le mot de passe associé à chaque utilisateur
 
@@ -96,7 +90,7 @@ private final AdministrateursService administrateursService;
 		}
 
 
-
+//Verifie l'authentification du profil administrateur et dirige vers l'espace d'administration le cas échéant
 @PostMapping(value = {"/administrationauthentification"})
 public String AuthentificationAdministration(@RequestParam(value = "user") String user,@RequestParam(value = "password") String password, HttpSession session, Model model) {
 	passwordsInit();
@@ -112,6 +106,7 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 	}
 }
 
+//Administration : Ferme la session d'administration
 	@PostMapping(value = {"/administration/quit"})
 	public String DésauthentificationAdministration( HttpSession session) {
 
@@ -121,42 +116,21 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 
 	}
 
-
+//Administration : Affiche la page d'administration
 	@GetMapping(value = {"/administration"})
 	public String AccueilAdministrationGET() {
 
 		return "AccueilAdministration";
 	}
 
-
+/*
 	@PostMapping(value = {"/administration"})
 	public String AccueilAdministrationPOST() {
 		return "AccueilAdministration";
 	}
-/*
-	@PostMapping(value = {"/administration"})
-	public String AccueilAdministration(@RequestParam(value = "user") String user,@RequestParam(value = "password") String password, Model model ) {
-		passwordsInit();
-
-		if (!passwords.containsKey(user)) {
-			return "authentification";}
-
-			if (passwords.get(user).equals(password)) {
-			return "AccueilAdministration";
-		}
-		 if ((!passwords.get(user).equals(password))) {
-			//model.addAttribute("erreurAuthentification","Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau");
-			return "authentification";
-		} else 	return "authentification";
-
-
-	}
 */
 
-
-
-
-
+//Administration : Affiche la page de création d'un produit
 	@GetMapping(value = {"/administration/creerproduit"})
 	public String ajoutProduit(Model model) {
 		//model.addAttribute("produit_new", new Produit());
@@ -167,6 +141,7 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 		return "CreerProduit";
 	}
 
+	//Administration : Affiche la page de recherche d'un produit
 	@RequestMapping(path = "/administration/rechercherproduit", method = RequestMethod.GET)
 	public String RechercherProduit(Model model) {
 		List<Produit> produits = produitService.findAll();
@@ -177,27 +152,48 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 		return "RechercherProduit";
 	}
 
+	//Administration : Affiche les résultats de recherche d'un produit
 	@RequestMapping(path = "/administration/rechercherproduit", method = RequestMethod.POST)
-	public String TrouverProduit(Model model, @ModelAttribute("libelle") String libelle,@ModelAttribute("id") Long id) {
+	public String trouverProduit(Model model, @ModelAttribute("libelle") String libelle, @ModelAttribute("id") String id) {
 		model.addAttribute("produit_new", new Produit());
-		model.addAttribute("produitService",produitService);
+		model.addAttribute("produitService", produitService);
 
-		if (id!=null && libelle.isEmpty()){
-			Produit produitTrouve = produitService.getById(id);
-			List <Produit> produitsTrouves = new ArrayList<>();
-			produitsTrouves.add(produitTrouve);
-			model.addAttribute("produitsTrouves", produitsTrouves);
-		} else if (!libelle.isEmpty()) {
-		List <Produit> produitsTrouves = produitService.getByLibelle(libelle);
-			model.addAttribute("produitsTrouves", produitsTrouves);
+		try {
+			Long productId = null;
+			if (id != null && !id.isEmpty()) {
+				productId = Long.parseLong(id);
+			}
+
+			List<Produit> produitsTrouves = new ArrayList<>();
+			if (productId == null && libelle.isEmpty()) {
+				return "RechercherProduit";
+			} else if (productId != null && libelle.isEmpty()) {
+				Produit produitTrouve = produitService.getById(productId);
+LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
+				if (produitTrouve != null) {
+					produitsTrouves.add(produitTrouve);
+					model.addAttribute("produitsTrouves", produitsTrouves);
+				}
+				else return "RechercherProduit";
+
+			} else if (productId==null && !libelle.isEmpty()) {
+				produitsTrouves = produitService.getByLibelle(libelle);
+				LOGGER.debug("produitsTrouves : "+ produitsTrouves.toString() );
+				model.addAttribute("produitsTrouves", produitsTrouves);
+			} else {
+				return "RechercherProduit";
+			}
+
+			List<Categorie> categories = categorieService.findAll();
+			model.addAttribute("categories", categories);
+		} catch (Exception e) {
+			return "RechercherProduit";
 		}
-		else return "RechercherProduit" ;
-System.out.println("ZZZZZ ID : "+id);
-		List <Categorie> categories = categorieService.findAll();
-		model.addAttribute("categories", categories);
+
 		return "RechercherProduit";
 	}
 
+	//Administration : Affiche la fiche produit
 	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.GET)
 	public String FicheProduit(Model model, @PathVariable("id") Long id) {
 
@@ -210,7 +206,7 @@ System.out.println("ZZZZZ ID : "+id);
 
 		return "ficheProduit";
 	}
-
+//Administration : Modifie le produit
 	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.POST)
 	public RedirectView ModifierProduit(RedirectAttributes redirectAttributes,Model model, @PathVariable("id") Long id, @RequestParam("libelle")String libelle,
 										@RequestParam("description")String description, @RequestParam("categorie")String categorie, @RequestParam("prixDeBase")String prixDeBase) {
@@ -235,7 +231,7 @@ System.out.println("ZZZZZ ID : "+id);
 		return redirectView;
 	}
 
-
+//Administration : Applique une promotion au produit
 	@RequestMapping(path = "/administration/produit/{id}/promotion", method = RequestMethod.POST)
 	public RedirectView AppliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
 										@RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
@@ -253,7 +249,7 @@ System.out.println("ZZZZZ ID : "+id);
 		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
 		return redirectView;
 	}
-
+//Administration : Supprime le produit
 	@RequestMapping(path = "/administration/produit/{id}/supprimer", method = RequestMethod.POST)
 	public RedirectView SupprimerProduit(Model model, @PathVariable("id") Long id) {
 
@@ -264,7 +260,7 @@ System.out.println("ZZZZZ ID : "+id);
 
 		produitService.deleteById(id);
 
-		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
+		RedirectView redirectView = new RedirectView("/administration", true);
 		return redirectView;
 	}
 
@@ -329,6 +325,8 @@ System.out.println("ZZZZZ ID : "+id);
 
 	}
 	*/
+
+	//Administration : Crée un produit
 @PostMapping("/image/saveImageDetails")
 public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie") Long idcategorie,
 													 @RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description, @RequestParam("libelle") String libelle,
@@ -381,9 +379,9 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-
 }
 
+//Affiche l'image du produit
 	@GetMapping("/image/display/{id}")
 	@ResponseBody
 	void showImage(@PathVariable("id") Long id, HttpServletResponse response)
@@ -394,83 +392,7 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 		response.getOutputStream().write(image.get().getImage());
 		response.getOutputStream().close();
 	}
-/*
-	@GetMapping("/image/imageDetails")
-	String showProductDetails(@RequestParam("id") Long id, Model model) {
-		try {
-			log.info("Id :: " + id);
-			if (id != 0) {
-				Optional<Produit> produit = produitService.getImageById(id);
-
-				log.info("products :: " + produit);
-				if (produit.isPresent()) {
-					model.addAttribute("id", produit.get().getId());
-					model.addAttribute("description", produit.get().getDescription());
-					model.addAttribute("libelle", produit.get().getLibelle());
-					model.addAttribute("prix", produitService.calculerPrix(produitService.findById(id)));
-					//model.addAttribute("promotion", promotionService.getSelonProduit());
-					model.addAttribute("catégorie", produit.get().getCategorie().getLibelle());
-					return "detailProduit";
-				}
-				return "redirect:/home";
-			}
-			return "redirect:/";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "redirect:/";
-		}
-	}
-*/
 
 
-/*
-	@GetMapping("/")
-	String catalogue(Model model) {
-		List<Produit> produits = produitService.findAll();
-
-		for (Produit produit : produits) {
-			try {
-				if (produit.getPromotion() != null && produit.getPromotion().getDatedebut().isBefore(LocalDate.now()) && produit.getPromotion().getDatefin().isAfter(LocalDate.now())) {
-					model.addAttribute("promotion_" + produit.getId(), "Promotion de " + promotionService.afficherRemiseEnPourcentage(produit.getPromotion().getRemise()) + " jusqu'au " + produit.getPromotion().getDatefin());
-					model.addAttribute("prix_" + produit.getId(), produit.getPrix() - produit.getPrix() * produit.getPromotion().getRemise());
-				} else {
-					model.addAttribute("promotion_" + produit.getId(), "");
-					model.addAttribute("prix_" + produit.getId(), produit.getPrix());
-				}
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-		}
-
-		model.addAttribute("produits", produits);
-		return "Catalogue";
-	}
-
-*/
-
-/*
-	@GetMapping("/")
-	String catalogue(Model model) {
-		List<Produit> produits = produitService.findAll();
-
-		model.addAttribute("produits", produits);
-
-		//model.addAttribute("remise",promotionService.afficherRemiseEnPourcentage(produit.getPromotion().getRemise()));
-		try {
-			if (produit.getPromotion() != null && produit.getPromotion().getDatedebut().isBefore(LocalDate.now()) && produit.getPromotion().getDatefin().isAfter(LocalDate.now())) {
-				model.addAttribute ("promotion", "Promotion de"+promotionService.afficherRemiseEnPourcentage(produit.getPromotion().getRemise())+"jusqu'au "+produit.getPromotion().getDatefin());
-				model.addAttribute ("prix",produit.getPrix()-produit.getPrix()*produit.getPromotion().getRemise());
-			} else {
-				model.addAttribute ("promotion", "");
-				model.addAttribute ("prix",produit.getPrix());
-			}
-		} catch (Exception e)
-		{
-System.out.println(e);
-		}
-		return "Catalogue";
-
-}
-*/
 }
 

@@ -41,6 +41,8 @@ public class ProduitService {
     public Produit findById(Long i) {
 		return produitRepository.getSelonId(i);
     }
+
+	//Calcule le prix en cours d'un produit selon qu'il y ait une promotion en cours ou non
 	public double calculerPrixEnCours(Produit produit) {
 		if (produit.getPromotion() != null) {
 			if ((produit.getPromotion().getDatedebut().isBefore(LocalDate.now()) || produit.getPromotion().getDatedebut().isEqual(LocalDate.now())) &&

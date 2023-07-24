@@ -6,7 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
-  <title>Thymeleaf Form handling Demo</title>
+  <title>Fiche Produit</title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
         rel="stylesheet">
 </head>
@@ -103,12 +103,6 @@
     <input class="form-control" id="prixDeBase" name="prixDeBase" th:value="${updatedProduit.prixDeBase}" type="text" pattern="[0-9]+([,\.][0-9]+)?" />
   </div>
 
-  <!--
-  <div class="form-group">
-    <label for="categorie">Catégorie</label>
-    <input class="form-control" id="categorie" name="categorie" th:value="${updatedProduit.categorie.libelle}" type="text" />
-  </div>
--->
   <div class="form-group">
     <label for="categorie">Catégorie</label>
     <select class="form-control" id="categorie" name="categorie">
@@ -124,7 +118,7 @@
 </form>
 
 
-<form method="post" th:action="@{'/administration/produit/'+${id}/supprimer}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ?')">
+<form method="post" th:action="@{'/administration/produit/'+${id}+'/supprimer'}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ?')">
   <input type="hidden" name="produit" id="produit" th:value="${produit.id}" />
   <div class="form-group">
     <input class="btn btn-danger" type="submit" value="Supprimer le produit" />

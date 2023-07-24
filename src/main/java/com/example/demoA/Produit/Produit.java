@@ -42,7 +42,9 @@ public class Produit {
     @Column(name = "datecreation", nullable = false)
     private Date datecreation;
 
-	public Produit() {}
+	public Produit() {
+
+	}
 
 	public Produit(String libelle, String description, double prixDeBase, Categorie categorie, Promotion promotion, byte[] image, Date datecreation) {
 		this.libelle = libelle;
@@ -53,21 +55,17 @@ public class Produit {
 		this.image = image;
 		this.datecreation = datecreation;
 	}
+
+	// Vérifie ou met à jour une promotion associée à un produit après son chargement à partir de la base de données
 	@PostLoad
 	public void updatePromotion() {
-		/*if (promotion != null && promotion.getDatefin().isBefore(LocalDate.now())); {
-			promotion = null;
-*/			if(promotion != null ) {
+		// Si la promotion n'est plus valide, elle est retirée du produit en la définissant à null
+			if(promotion != null ) {
 			if (promotion.getDatedebut().isAfter(LocalDate.now()) || promotion.getDatefin().isBefore(LocalDate.now()) || promotion.getRemise() == 0) {
 				this.promotion=null;
-
-		//	} else if (promotion.getDatedebut() == null || promotion.getDatefin() == null || promotion.getRemise() == 0) {
-
-			}
-
+				}
 		}
-
-		}
+	}
 
 	public Long getId() {
 		return id;

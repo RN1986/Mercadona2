@@ -6,6 +6,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+//vérifie si l'utilisateur est authentifié avant d'autoriser l'accès aux URL d'administration
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
