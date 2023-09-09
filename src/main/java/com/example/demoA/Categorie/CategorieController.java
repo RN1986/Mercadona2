@@ -34,7 +34,7 @@ public class CategorieController {
         List<Categorie> categories = categorieService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("categorie_new", new Categorie());
-        return "creerCategorie";
+        return "CreerCategorie";
     }
 
     //Adminsitration : Crée la catégorie
