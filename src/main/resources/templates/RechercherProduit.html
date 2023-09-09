@@ -70,7 +70,7 @@
     <th>Actions</th>
   </tr>
   <tr th:if="${#lists.isEmpty(produitsTrouves)}">
-    <td class="text-center" colspan="7">Aucun produit n'est enregistré sous ce libellé</td>
+    <td class="text-center" colspan="7">Aucun produit n'est enregistré sous ce libellé et/ou cet ID</td>
   <tr th:each="produit : ${produitsTrouves}">
   <td class="align-middle" th:text="${produit != null ? produit.id : ''}"></td>
     <td class="align-middle text-center">

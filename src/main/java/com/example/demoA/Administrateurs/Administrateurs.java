@@ -1,6 +1,9 @@
 package com.example.demoA.Administrateurs;
 
+
+
 import javax.persistence.*;
+
 
 @Entity
 @Table(name = "administrateurs")

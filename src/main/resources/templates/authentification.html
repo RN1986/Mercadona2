@@ -39,7 +39,7 @@
           <form method="post" th:action="@{/administrationauthentification}">
             <div class="form-group">
               <label for="username">Nom d'utilisateur:</label>
-              <input type="text" class="form-control" id="username" name="user" required>
+              <input type="text" class="form-control" id="username" name="username" required>
             </div>
             <div class="form-group">
               <label for="password">Mot de passe:</label>
@@ -49,7 +49,10 @@
               <button type="submit" class="btn btn-dark btn-block">Se connecter</button>
             </div>
           </form>
-          <div th:if="${erreurAuthentification}" th:utext="${erreurAuthentification}" class="alert alert-danger text-center"></div>
+
+          <div th:if="${param.error}" th:utext="${erreurAuthentification}" class="alert alert-danger text-center">Identifiants invalides</div>
+          <div th:if="${param.logout}" th:utext="${logout}" class="alert alert-success text-center">Déconnecté</div>
+
         </div>
       </div>
     </div>

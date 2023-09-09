@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -72,14 +73,22 @@ private final AdministrateursService administrateursService;
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
 		model.addAttribute("produitService",produitService);
+		//System.out.println(hashPassword("mdp"));
 		return "Catalogue";
 	}
-// Affiche la page d'authentification pour accéder à l'espace d'administration
+/*
+	private String hashPassword(String mdp) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		return encoder.encode(mdp);
+	}*/
+/*
+	// Affiche la page d'authentification pour accéder à l'espace d'administration
 	@GetMapping(value = {"/administrationauthentification"})
 	public String AuthentificationAdministrationGET(){
 		return "authentification";
 	}
-
+*/
+	/*
 	Map<String, String> passwords = new HashMap(); //Contient le mot de passe associé à chaque utilisateur
 
 	public void passwordsInit() {
@@ -88,8 +97,32 @@ private final AdministrateursService administrateursService;
 				passwords.put(administrateur.getNomutilisateur(), administrateur.getMotdepasse());
 			}
 		}
+		*/
+/*
+	// Ne pas stocker les mots de passe dans une structure de données en mémoire
 
+	// Modifier la méthode AuthentificationAdministration() pour utiliser le hachage cryptographique
+	@PostMapping(value = {"/administrationauthentification"})
+	public String AuthentificationAdministration(@RequestParam(value = "user") String user,
+												 @RequestParam(value = "password") String password,
+												 HttpSession session,
+												 Model model) {
+		// Récupérez le mot de passe haché associé à l'utilisateur depuis la base de données
+		String motDePasseHacheEnBase = administrateursService.getMotDePasseHache(user);
 
+		if (motDePasseHacheEnBase != null && bcrypt.checkpw(password, motDePasseHacheEnBase)) {
+			// L'utilisateur est authentifié, enregistre l'état de l'authentification dans la session
+			session.setAttribute("authenticated", true);
+			return "AccueilAdministration";
+		} else {
+			model.addAttribute("erreurAuthentification", "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau");
+			// L'utilisateur n'est pas authentifié, renvoie à la page d'authentification
+			return "authentification";
+		}
+	}
+
+*/
+/*
 //Verifie l'authentification du profil administrateur et dirige vers l'espace d'administration le cas échéant
 @PostMapping(value = {"/administrationauthentification"})
 public String AuthentificationAdministration(@RequestParam(value = "user") String user,@RequestParam(value = "password") String password, HttpSession session, Model model) {
@@ -105,9 +138,10 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 		return "authentification";
 	}
 }
-
+*/
+	/*
 //Administration : Ferme la session d'administration
-	@PostMapping(value = {"/administration/quit"})
+	@PostMapping(value = {"/administrationlogout"})
 	public String DésauthentificationAdministration( HttpSession session) {
 
 			// L'utilisateur est désauthentifié, enregistre l'état de l'authentification dans la session
@@ -115,7 +149,7 @@ public String AuthentificationAdministration(@RequestParam(value = "user") Strin
 			return "authentification";
 
 	}
-
+*/
 //Administration : Affiche la page d'administration
 	@GetMapping(value = {"/administration"})
 	public String AccueilAdministrationGET() {

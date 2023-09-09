@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdministrateursRepository extends JpaRepository<Administrateurs, Long> {
 
+    String findMotdepasseByNomutilisateur(String nomUtilisateur);
+
+    Administrateurs findByNomutilisateur(String nomUtilisateur);
 }
