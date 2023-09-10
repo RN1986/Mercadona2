@@ -28,7 +28,6 @@ public class AuthentificationController {
 
     private CustomUserDetailsService customUserDetailsService;
 
-
     public AuthentificationController(CustomUserDetailsService customUserDetailsService,AdministrateursService administrateursService) {
         this.customUserDetailsService = customUserDetailsService;
         this.administrateursService = administrateursService;
@@ -49,45 +48,7 @@ public class AuthentificationController {
             passwords.put(administrateur.getNomutilisateur(), administrateur.getMotdepasse());
         }
     }
-/*
-    //Verifie l'authentification du profil administrateur et dirige vers l'espace d'administration le cas échéant
-    @PostMapping(value = {"/administrationauthentification"})
-    public String AuthentificationAdministration(@RequestParam(value = "user") String user, @RequestParam(value = "password") String password, HttpSession session, Model model) {
-        passwordsInit();
 
-        if (passwords.containsKey(user) && passwords.get(user).equals(password)) {
-            // L'utilisateur est authentifié, enregistre l'état de l'authentification dans la session
-            session.setAttribute("authenticated", true);
-            return "AccueilAdministration";
-        } else {
-            model.addAttribute("erreurAuthentification", "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau");
-            // L'utilisateur n'est pas authentifié, renvoie à la page d'authentification
-            return "authentification";
-        }
-    }
-*/
-/*
-    @PostMapping("/administrationauthentification")
-    public String handleLogin(@RequestParam("user") String user,
-                              @RequestParam("password") String password,
-                              RedirectAttributes redirectAttributes) {
-
-System.out.println("USER dans controleur : "+ user);
-        // Perform authentication using Spring Security
-        UserDetails administrateur = customUserDetailsService.loadUserByUsername(user);
-
-        // Comparaison du mot de passe avec celui encodé enregistré dans les détails de l'utilisateur
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (administrateur != null && passwordEncoder.matches(password, administrateur.getPassword())) {
-            // Authentication successful, redirect to the administration home page
-            return "redirect:/AccueilAdministration";
-        } else {
-            // Authentication failed, show error message on the login page
-            redirectAttributes.addFlashAttribute("erreurAuthentification", "Identifiants invalides");
-            return "redirect:/authentification";
-        }
-    }
-*/
 
     // Helper method to check if the password matches the hashed password
     private boolean passwordMatches(String hashedPassword, String plainPassword) {

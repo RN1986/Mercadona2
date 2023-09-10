@@ -32,27 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService(AdministrateursRepository administrateursRepository) {
         this.administrateursRepository = administrateursRepository;
     }
-/*
-    @PostMapping("/administrationauthentification")
-    public String handleLogin(@RequestParam("user") String user,
-                              @RequestParam("password") String password,
-                              RedirectAttributes redirectAttributes) {
 
-        System.out.println("USER dans controleur : "+ user);
-        // Perform authentication using Spring Security
-        UserDetails administrateur = loadUserByUsername(user);
-
-        // Comparaison du mot de passe avec celui encodé enregistré dans les détails de l'utilisateur
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (administrateur != null && passwordEncoder.matches(password, administrateur.getPassword())) {
-            // Authentication successful, redirect to the administration home page
-            return "redirect:/AccueilAdministration";
-        } else {
-            // Authentication failed, show error message on the login page
-            redirectAttributes.addFlashAttribute("erreurAuthentification", "Identifiants invalides");
-            return "redirect:/authentification";
-        }
-    }*/
     @Override
     public  UserDetails loadUserByUsername(String user) throws UsernameNotFoundException {
         //logger.info("User: {}", user);

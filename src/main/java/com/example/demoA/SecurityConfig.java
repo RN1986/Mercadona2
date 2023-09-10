@@ -30,20 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    /*    http.authorizeRequests()
-                .antMatchers("/").permitAll() // Allow all to access the login page
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic();
 
 
-        http.authorizeRequests()
-                        .antMatchers("/","/image/display/**","/image/saveImageDetails").permitAll() // Permettre à tous d'accéder à la page d'authentification
-                        .anyRequest().authenticated()
-                        .and()
-                .httpBasic();
-*/
-        http.authorizeRequests()
+       http.authorizeRequests()
                 .antMatchers("/", "/image/saveImageDetails", "/image/display/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -56,8 +45,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/administrationlogout") // Spécifier l'URL de déconnexion personnalisée
                 //.logoutSuccessUrl("/administrationauthentification") // Rediriger après la déconnexion réussie
                 .and()
-                .httpBasic();
+                .httpBasic()
+               .and()
+               .csrf().disable().cors();;
+
     }
+
 
 
     @Override
@@ -71,77 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-/*
-@Configuration
-public class SecurityConfig  {
 
-    @Bean
-    public SecurityFilterChain apiSecurity (HttpSecurity http) throws Exception {
-
-        http.authorizeHttpRequests((auth) -> auth
-                .antMatchers("/").permitAll() // Permettre à tous d'accéder à la page d'authentification
-                         .anyRequest()
-                .authenticated()
-        )
-                .httpBasic();
-        return http.build();
-    }
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService (){
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("mdp"))
-             .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(admin);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // Utiliser bcrypt comme algorithme de hachage des mots de passe
-        return new BCryptPasswordEncoder();
-    }
-
-    /*
-    @Autowired
-    private YourUserDetailsService userDetailsService; // Remplacez YourUserDetailsService par votre propre service utilisateur
-/*
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("passage par SecurityConfif ?");
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-*/
-/*
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/administrationauthentification").permitAll() // Permettre à tous d'accéder à la page d'authentification
-                //.anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/administrationauthentification") // Spécifier la page d'authentification personnalisée
-                .defaultSuccessUrl("/administration") // Rediriger vers l'accueil après l'authentification réussie
-                .and()
-                .logout()
-                .logoutUrl("/administrationlogout") // Spécifier l'URL de déconnexion personnalisée
-                .logoutSuccessUrl("/administrationauthentification") // Rediriger après la déconnexion réussie
-                .and()
-                .csrf().disable(); // Désactiver la protection CSRF pour simplifier l'exemple
-    }
-/*
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // Utiliser bcrypt comme algorithme de hachage des mots de passe
-        return new BCryptPasswordEncoder();
-    }
-/*
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-*/
 
 

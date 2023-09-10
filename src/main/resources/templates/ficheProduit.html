@@ -9,6 +9,9 @@
   <title>Fiche Produit</title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
         rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="/js/produitmaj.js"></script>
 </head>
 <body class="container">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -57,7 +60,7 @@
     <td th:text="${produit.promotion != null ? produit.promotion.remise+' % du '+ #temporals.format(produit.promotion.datedebut, 'dd/MM/yyyy')+' au '+#temporals.format(produit.promotion.datefin, 'dd/MM/yyyy') : ''}"></td>
     <td th:text="${produitService.calculerPrixEnCours(produit)+' €'}"></td>
     <td class="align-middle text-center">
-    <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}"  alt="Image du produit" type="image/jpeg"/>
+      <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}" alt="Image du produit" type="image/jpeg" style="max-width: 100px; max-height: 100px;"/>
   </tbody>
 </table>
 </form>
@@ -112,6 +115,12 @@
       </th:block>
     </select>
   </div>
+
+  <div class="form-group">
+    <label for="image">Image</label>
+    <input class="form-control-file" id="image" name="image" th:value="${updatedProduit.image}"type="file" />
+  </div>
+
   <div class="form-group">
     <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
   </div>

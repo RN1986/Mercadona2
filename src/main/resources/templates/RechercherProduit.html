@@ -75,7 +75,7 @@
   <td class="align-middle" th:text="${produit != null ? produit.id : ''}"></td>
     <td class="align-middle text-center">
 
-      <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}"  alt="Image du produit" type="image/jpeg"/>
+      <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}" alt="Image du produit" type="image/jpeg" style="max-width: 100px; max-height: 100px;"/>
 
 
     <td class="align-middle" th:text="${produit != null ? produit.libelle : ''}"></td>

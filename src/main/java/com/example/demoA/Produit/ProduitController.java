@@ -2,6 +2,7 @@ package com.example.demoA.Produit;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -298,86 +299,31 @@ LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 		return redirectView;
 	}
 
-/*
-	@PostMapping("/image/saveImageDetails")
-	public @ResponseBody ResponseEntity<?> createProduct(@RequestParam("name") String name,
-			@RequestParam("price") double price, @RequestParam("description") String description, Model model, HttpServletRequest request
-			,final @RequestParam("image") MultipartFile file) {
-
-
-		try {
-			//String uploadDirectory = System.getProperty("user.dir") + uploadFolder;
-			String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
-			log.info("uploadDirectory:: " + uploadDirectory);
-			String fileName = file.getOriginalFilename();
-			String filePath = Paths.get(uploadDirectory, fileName).toString();
-			log.info("FileName: " + file.getOriginalFilename());
-			if (fileName == null || fileName.contains("..")) {
-				model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence \" + fileName");
-				return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
-			}
-
-			//logs
-			String[] names = name.split(",");
-			String[] descriptions = description.split(",");
-			Date createDate = new Date();
-			log.info("Name: " + names[0]+" "+filePath);
-			log.info("description: " + descriptions[0]);
-			log.info("price: " + price);
-			//
-
-			try {
-				File dir = new File(uploadDirectory);
-				if (!dir.exists()) {
-					log.info("Folder Created");
-					dir.mkdirs();
-				}
-				// Save the file locally
-				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-				stream.write(file.getBytes());
-				stream.close();
-			} catch (Exception e) {
-				log.info("in catch");
-				e.printStackTrace();
-			}
-			byte[] imageData = file.getBytes();
-			ImageGallery imageGallery = new ImageGallery();
-			imageGallery.setName(names[0]);
-			imageGallery.setImage(imageData);
-			imageGallery.setPrice(price);
-			imageGallery.setDescription(descriptions[0]);
-			imageGallery.setCreateDate(createDate);
-			imageGalleryService.saveImage(imageGallery);
-			log.info("HttpStatus===" + new ResponseEntity<>(HttpStatus.OK));
-			return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.info("Exception: " + e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-
-
-	}
-	*/
-
 	//Administration : Crée un produit
 @PostMapping("/image/saveImageDetails")
 public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie") Long idcategorie,
 													 @RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description, @RequestParam("libelle") String libelle,
-													 Model model, HttpServletRequest request,
-													final @RequestParam("image") MultipartFile file) {
+													 Model model, HttpServletRequest request
+		,final @RequestParam("image") MultipartFile file
+) {
+	log.debug("entrée dans le controleur");
 
 	try {
 
 		String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+		log.info("uploadDirectory:: " + uploadDirectory);
 		String fileName = file.getOriginalFilename();
 		String filePath = Paths.get(uploadDirectory, fileName).toString();
+		log.info("FileName: " + file.getOriginalFilename());
 		if (fileName == null || fileName.contains("..")) {
 			model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence " + fileName);
 			return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
 		}
-		/*String[] libelles = libelle.split(",");
-		String[] descriptions = description.split(",");*/
+		/*
+		String[] libelles = libelle.split(",");
+		String[] descriptions = description.split(",");
+		*/
+
 		try {
 			File dir = new File(uploadDirectory);
 			if (!dir.exists()) {
@@ -385,7 +331,8 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 			}
 
 			// Save the file locally
-			BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()));
+			//BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()));
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
 			stream.write(file.getBytes());
 			stream.close();
 		} catch (Exception e) {
@@ -398,6 +345,7 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 		//produit.setLibelle(libelles[0]);
 		produit.setLibelle(libelle);
 		produit.setImage(image);
+		log.info("image : " + produit.getImage().toString());
 		produit.setPrixDeBase(prixDeBase);
 		produit.setCategorie(categorieService.getById(idcategorie));
 		//produit.setCategorie(categorieService.getSelonLibelle(categorie));
@@ -407,7 +355,10 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 		produit.setDatecreation(new Date());
 		produitService.save(produit);
 
-		return new ResponseEntity<>("Product Saved With File - " + fileName, HttpStatus.OK);
+		return new ResponseEntity<>("Product Saved With File - " +
+				//fileName
+				"0"
+				, HttpStatus.OK);
 	} catch (Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -415,6 +366,89 @@ public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie")
 
 }
 
+/*
+	//Administration : Crée un produit
+	@PostMapping("/image/saveImageDetailsmaj/{id}")
+	public @ResponseBody ResponseEntity<?> creerProduit( @PathVariable("id") Long id,@RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
+														@RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr,
+														@RequestParam("remise")int remise,@RequestParam("idcategorie") Long idcategorie,
+														@RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description,
+														@RequestParam("libelle") String libelle,
+														Model model, HttpServletRequest request
+			,final @RequestParam("image") MultipartFile file
+	) {
+		log.debug("entrée dans le controleur");
+
+		try {
+
+			String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+			log.info("uploadDirectory:: " + uploadDirectory);
+			String fileName = file.getOriginalFilename();
+			String filePath = Paths.get(uploadDirectory, fileName).toString();
+			log.info("FileName: " + file.getOriginalFilename());
+			if (fileName == null || fileName.contains("..")) {
+				model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence " + fileName);
+				return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
+			}
+		/*
+		String[] libelles = libelle.split(",");
+		String[] descriptions = description.split(",");
+
+
+			try {
+				File dir = new File(uploadDirectory);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				// Save the file locally
+				//BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()));
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+				stream.write(file.getBytes());
+				stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+			model.addAttribute("produitService", produitService);
+			Produit produitMaj = produitService.getById(id);
+			model.addAttribute("ProduitMaj", produitMaj);
+			if (datedebutStr != null && datefinStr != null && remise != 0) {
+				LocalDate datedebut = LocalDate.parse(datedebutStr);
+				LocalDate datefin = LocalDate.parse(datefinStr);
+				produitMaj.setPromotion(new Promotion(datedebut, datefin, remise));
+			}
+			else 		produitMaj.setPromotion(null);
+			produitService.update(produitMaj);
+
+	//		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
+
+			byte[] image = file.getBytes();
+
+			//produit.setLibelle(libelles[0]);
+			produitMaj.setLibelle(libelle);
+			produitMaj.setImage(image);
+			log.info("image : " + produitMaj.getImage().toString());
+			produitMaj.setPrixDeBase(prixDeBase);
+			produitMaj.setCategorie(categorieService.getById(idcategorie));
+			//produit.setCategorie(categorieService.getSelonLibelle(categorie));
+
+			produitMaj.setDescription(description);
+			//produit.setDescription(descriptions[0]);
+			//produit.setDatecreation(new Date());
+			produitService.save(produitMaj);
+
+			return new ResponseEntity<>("Product Saved With File - " +
+					//fileName
+					"0"
+					, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
+*/
 //Affiche l'image du produit
 	@GetMapping("/image/display/{id}")
 	@ResponseBody
