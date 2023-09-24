@@ -67,7 +67,7 @@
     <th>Catégorie</th>
     <th>Promotion en cours</th>
     <th>Prix en cours</th>
-    <th>Actions</th>
+    <th></th>
   </tr>
   <tr th:if="${#lists.isEmpty(produitsTrouves)}">
     <td class="text-center" colspan="7">Aucun produit n'est enregistré sous ce libellé et/ou cet ID</td>
@@ -75,7 +75,7 @@
   <td class="align-middle" th:text="${produit != null ? produit.id : ''}"></td>
     <td class="align-middle text-center">
 
-      <img th:if="${produit.image != null}" th:src="@{${'/image/display/'+ produit.id}}" alt="Image du produit" type="image/jpeg" style="max-width: 100px; max-height: 100px;"/>
+      <img th:if="${produit.image != null}" th:src="@{${'/image/produit/'+ produit.id}}" alt="Image du produit" type="image/jpeg" style="max-width: 100px; max-height: 100px;"/>
 
 
     <td class="align-middle" th:text="${produit != null ? produit.libelle : ''}"></td>
@@ -83,9 +83,9 @@
     <td class="align-middle" th:text="${produit != null ? produit.prixDeBase : ''} + ' €'"></td>
     <td class="align-middle" th:text="${produit != null ? produit.categorie.libelle : ''}"></td>
   <td class="align-middle" th:text="${produit != null ? (produit.promotion != null ? produit.promotion.remise + ' % jusqu''au ' + produit.promotion.datefin : 'Aucune') : ''}"></td>
-  <td th:text="${produitService.calculerPrixEnCours(produit)+' €'}"></td>
+  <td class="align-middle" th:text="${produitService.calculerPrixEnCours(produit)+' €'}"></td>
     <td class="align-middle text-center">
-      <a class="btn btn-secondary" th:if="${produit != null}" th:href="'/administration/produit/' + ${produit.id}">✏</a>
+      <a class="btn btn-secondary" th:if="${produit != null}" th:href="'/administration/produit/' + ${produit.id}">Promotion</a>
 
     </td>
   </tr>

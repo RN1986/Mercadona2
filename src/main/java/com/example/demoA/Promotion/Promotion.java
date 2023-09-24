@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Entity
@@ -19,12 +20,16 @@ public class Promotion {
     private LocalDate datefin;
     @Column(name = "remise", precision = 2)
     private int remise;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "datecreation", nullable = false)
+    private Date datecreation;
 
 
-    public Promotion(LocalDate datedebut, LocalDate datefin, int remise) {
+    public Promotion(LocalDate datedebut, LocalDate datefin, int remise,Date datecreation) {
         this.datedebut = datedebut;
         this.datefin = datefin;
         this.remise = remise;
+        this.datecreation = datecreation;
 
         }
 

@@ -52,6 +52,10 @@ public class ProduitService {
 		}else return produit.getPrixDeBase();
 	}
 
+
+
+
+
     public List<Produit> getByLibelle(String libelle) {
 		return produitRepository.getSelonLibelle(libelle);
     }

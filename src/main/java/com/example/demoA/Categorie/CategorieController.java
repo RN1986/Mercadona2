@@ -3,16 +3,16 @@ package com.example.demoA.Categorie;
 
 import com.example.demoA.Produit.ProduitService;
 import com.example.demoA.Promotion.PromotionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,8 +27,9 @@ public class CategorieController {
         this.promotionService = promotionService;
         this.categorieService = categorieService;
     }
-
     //Adminsitration : Affiche la page de création d'une catégorie
+    @Operation(description = "Affiche la page de création d'une catégorie")
+    @SecurityRequirement(name = "securityScheme")
     @RequestMapping(path = "/administration/categorie", method = RequestMethod.GET)
     public String creerCategorie(Model model) {
         List<Categorie> categories = categorieService.findAll();
@@ -38,10 +39,13 @@ public class CategorieController {
     }
 
     //Adminsitration : Crée la catégorie
+    @Operation(description = "Crée la catégorie")
+    @SecurityRequirement(name = "securityScheme")
     @RequestMapping(path = "/administration/categorie", method = RequestMethod.POST)
     public RedirectView creerCategorie(RedirectAttributes redirectAttributes, @ModelAttribute Categorie categorie_new,@RequestParam String libelle) {
         try {
             categorie_new.setLibelle(libelle.toUpperCase());
+            categorie_new.setDatecreation(new Date());
             categorieService.creerCategorie(categorie_new);
 
             String message = "La catégorie <b>" + categorie_new.getLibelle() + " </b> a été ajoutée ✅";

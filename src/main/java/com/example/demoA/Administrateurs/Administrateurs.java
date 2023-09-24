@@ -3,6 +3,7 @@ package com.example.demoA.Administrateurs;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -13,12 +14,15 @@ public class Administrateurs {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "nomutilisateur", nullable = false)
+    @Column(name = "nomutilisateur", nullable = false, unique=true)
     private String nomutilisateur;
 
     @Column(name = "motdepasse", nullable = false)
     private String motdepasse;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "datecreation", nullable = false)
+    private Date datecreation;
     public Administrateurs() {
     }
 
