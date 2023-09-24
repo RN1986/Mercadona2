@@ -26,7 +26,7 @@ public class AuthentificationController {
     }
 
     @GetMapping("/administrationauthentification")
-    public String AuthentificationAdministration(Model model) {
+    public String AfficherPageAuthentificationAdministration(Model model) {
         model.addAttribute("erreurAuthentification", "Le nom d'utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau");
         model.addAttribute("logout","Vous avez été déconnecté avec succès");
         return "authentification";

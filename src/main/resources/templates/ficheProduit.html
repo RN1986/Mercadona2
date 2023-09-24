@@ -13,9 +13,12 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <script src="/js/produitmaj.js"></script>
+  <script src="/js/produit.js"></script>
+
 </head>
 <body class="container">
+
+<!--barre de navigation-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="#">Mercadona</a>
@@ -38,8 +41,8 @@
   </div>
 </nav>
 
+<!--Aperçu des informations du produit-->
 <h1>Fiche Produit</h1>
-
 <table class="table table-striped table-bordered" method="get" th:action="@{/administration/produit/{id}}" th:object="${produit}">
   <thead>
   <tr>
@@ -71,6 +74,7 @@
  </table>
  </form>
 
+<!--Formulaire pour appliquer une promotion-->
  <h4 class="my-5">Appliquer une promotion</h4>
  <form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}+'/promotion'}" th:object="${promoProduit}">
    <div class="form-group">
@@ -83,58 +87,45 @@
    </div>
    <div class="form-group">
      <label for="remise">Promotion : remise (%)</label>
-     <input class="form-control" id="remise" name="remise" type="number" required/>
+     <input class="form-control" id="remise" name="remise" type="number" required min="0" max="100"/>
    </div>
 
   <div class="form-group">
-    <input class="btn btn-primary" type="submit" value="Appliquer la promotion" />
+    <input id="submitBtn"class="btn btn-primary" type="submit" value="Appliquer la promotion" />
   </div>
 </form>
+<div id="dateError" class="text-danger"></div>
 <div th:if="${produitMessage}" th:utext="${produitMessage}" class="alert alert-success text-center"></div>
 
-<h4 class="my-5">Modifier les informations du produit</h4>
-<form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}}" th:object="${updatedProduit}">
-<div class="form-group">
-  <label for="libelle">Libellé</label>
-  <input class="form-control" id="libelle" name="libelle" th:value="${updatedProduit.libelle}" type="text" />
-</div>
-<div class="form-group">
-  <label for="description">Description</label>
-  <textarea class="form-control" id="description" name="description" th:value="${updatedProduit.description}"></textarea>
-</div>
-<div class="form-group">
-  <label for="prixDeBase">Prix de base (€)</label>
-  <input class="form-control" id="prixDeBase" name="prixDeBase" th:value="${updatedProduit.prixDeBase}" type="text" pattern="[0-9]+([,\.][0-9]+)?" />
-</div>
-
-<div class="form-group">
-  <label for="categorie">Catégorie</label>
-  <select class="form-control" id="categorie" name="categorie">
-    <option th:text="${updatedProduit.categorie.getLibelle}">Sélectionnez une catégorie</option>
-    <th:block th:each="categorie : ${categories}">
-      <option th:value="${categorie.getIdcategorie}" th:text="${categorie.getLibelle}"></option>
-    </th:block>
-  </select>
-</div>
-
-<div class="form-group">
-  <label for="image">Image</label>
-  <input class="form-control-file" id="image" name="image" th:value="${updatedProduit.image}"type="file" />
-</div>
-
-<div class="form-group">
-  <input class="btn btn-primary" type="submit" value="Enregistrer les modifications" />
-</div>
-</form>
-
-
+<!-- Suppression du produit (fonctionnalité non déployée car non demandée dans le cahier des charges mais pouvant faire l'objet d'une évolution future)
 <form method="post" th:action="@{'/administration/produit/'+${id}+'/supprimer'}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ?')">
-<input type="hidden" name="produit" id="produit" th:value="${produit.id}" />
-<div class="form-group">
-  <input class="btn btn-danger" type="submit" value="Supprimer le produit" />
-</div>
+  <input type="hidden" name="produit" id="produit" th:value="${produit.id}" />
+  <div class="form-group">
+    <input class="btn btn-danger" type="submit" value="Supprimer le produit" />
+  </div>
 </form>
+-->
 
+<!--script pour vérifier la cohérence des dates saisies dans le formulaire-->
+<script>
+          document.getElementById("submitBtn").addEventListener("click", function(event) {
+  var datedebut = new Date(document.getElementById("datedebut").value);
+  var datefin = new Date(document.getElementById("datefin").value);
+  var currentDate = new Date();
+  var dateError = document.getElementById("dateError");
+
+  if (datedebut <= currentDate) {
+  dateError.innerHTML ="La date de début doit être postérieure à la date actuelle.";
+  event.preventDefault(); // Empêche l'envoi du formulaire
+  } else if (datefin <= datedebut) {
+  dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
+  event.preventDefault(); // Empêche l'envoi du formulaire
+  }
+  else {
+      dateError.innerHTML = ""; // Efface le message d'erreur s'il n'y en a pas
+    }
+  });
+  </script>
 
 </body>
 </html>

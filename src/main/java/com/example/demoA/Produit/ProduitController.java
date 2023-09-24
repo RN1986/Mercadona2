@@ -70,11 +70,15 @@ private final AdministrateursService administrateursService;
 // Affiche la page Catalogue
 @Operation(description = "Affiche la page catalogue")
 	@GetMapping("/")
-	public String catalogue(Model model) {
+	public String AfficherCatalogue(Model model) {
 
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
 		model.addAttribute("produitService",produitService);
+
+	List <Categorie> categories = categorieService.findAll();
+
+	model.addAttribute("categories", categories);
 		return "Catalogue";
 	}
 
@@ -82,7 +86,7 @@ private final AdministrateursService administrateursService;
 @Operation(description ="Affiche la page d'administration")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration"})
-	public String AccueilAdministrationGET() {
+	public String AfficherPageAccueilAdministration() {
 
 		return "AccueilAdministration";
 	}
@@ -91,18 +95,80 @@ private final AdministrateursService administrateursService;
 @Operation(description ="Affiche la page de création d'un produit")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration/creerproduit"})
-	public String ajoutProduit(Model model) {
+	public String AfficherPageAjoutProduit(Model model) {
 
 		List <Categorie> categories = categorieService.findAll();
 		model.addAttribute("categories", categories);
 		return "CreerProduit";
 	}
 
+//Administration : Crée un produit
+	@PostMapping("/administration/creerproduit")
+	@SecurityRequirement(name = "securityScheme")
+	public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie") Long idcategorie,
+														@RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description, @RequestParam("libelle") String libelle,
+														Model model, HttpServletRequest request
+			,final @RequestParam("image") MultipartFile file
+	) {
+		log.debug("entrée dans le controleur");
+
+		try {
+
+			String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+			log.info("uploadDirectory:: " + uploadDirectory);
+			String fileName = file.getOriginalFilename();
+			String filePath = Paths.get(uploadDirectory, fileName).toString();
+			log.info("FileName: " + file.getOriginalFilename());
+			if (fileName == null || fileName.contains("..")) {
+				model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence " + fileName);
+				return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
+			}
+
+			try {
+				File dir = new File(uploadDirectory);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+				stream.write(file.getBytes());
+				stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+
+			byte[] image = file.getBytes();
+			Produit produit = new Produit();
+
+			produit.setLibelle(libelle);
+			produit.setImage(image);
+			log.info("image : " + produit.getImage().toString());
+			produit.setPrixDeBase(prixDeBase);
+			produit.setCategorie(categorieService.getById(idcategorie));
+
+			produit.setPromotion(null);
+			produit.setDescription(description);
+
+			produit.setDatecreation(new Date());
+			produitService.save(produit);
+
+			return new ResponseEntity<>("Product Saved With File - " +
+
+					"0"
+					, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
 	//Administration : Affiche la page de recherche d'un produit
 	@Operation(description ="Affiche la page de recherche d'un produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/rechercherproduit", method = RequestMethod.GET)
-	public String RechercherProduit(Model model) {
+	public String AfficherPageRechercherProduit(Model model) {
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
 		model.addAttribute("produit_new", new Produit());
@@ -130,7 +196,7 @@ private final AdministrateursService administrateursService;
 				return "RechercherProduit";
 			} else if (productId != null && libelle.isEmpty()) {
 				Produit produitTrouve = produitService.getById(productId);
-LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
+				LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 				if (produitTrouve != null) {
 					produitsTrouves.add(produitTrouve);
 					model.addAttribute("produitsTrouves", produitsTrouves);
@@ -158,7 +224,7 @@ LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 	@Operation(description ="Affiche la fiche produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.GET)
-	public String FicheProduit(Model model, @PathVariable("id") Long id) {
+	public String afficherFicheProduit(Model model, @PathVariable("id") Long id) {
 
 		model.addAttribute("produit", produitService.findById(id));
 		model.addAttribute("updatedProduit", produitService.findById(id));
@@ -169,38 +235,12 @@ LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 
 		return "ficheProduit";
 	}
-//Administration : Modifie le produit
-@Operation(description ="Modifie le produit")
-@SecurityRequirement(name = "securityScheme")
-	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.POST)
-	public RedirectView ModifierProduit(RedirectAttributes redirectAttributes,Model model, @PathVariable("id") Long id, @RequestParam("libelle")String libelle,
-										@RequestParam("description")String description, @RequestParam("categorie")String categorie, @RequestParam("prixDeBase")String prixDeBase) {
-
-		model.addAttribute("produitService", produitService);
-		Produit updatedProduit = produitService.findById(id);
-		model.addAttribute("updatedProduit", updatedProduit);
-		List <Categorie> categories = categorieService.findAll();
-		model.addAttribute("categories", categories);
-
-
-		updatedProduit.setLibelle(libelle);
-		updatedProduit.setDescription(description);
-
-
-		updatedProduit.setCategorie(categorieService.getSelonLibelle(categorie));
-		updatedProduit.setPrixDeBase(Double.parseDouble(prixDeBase));
-
-		produitService.update(updatedProduit);
-
-		RedirectView redirectView = new RedirectView("/administration", true);
-		return redirectView;
-	}
 
 //Administration : Applique une promotion au produit
 @Operation(description = "Applique une promotion au produit")
 @SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}/promotion", method = RequestMethod.POST)
-	public RedirectView AppliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
+	public RedirectView appliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
 										@RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
 
 		LocalDate datedebut = LocalDate.parse(datedebutStr);
@@ -216,10 +256,24 @@ LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
 		return redirectView;
 	}
-//Administration : Supprime le produit
 
-@Operation(description = "Supprime le produit")
-@SecurityRequirement(name = "securityScheme")
+
+//Affiche l'image du produit
+	@GetMapping("/image/produit/{id}")
+	@ResponseBody
+	void afficherImage(@PathVariable("id") Long id, HttpServletResponse response)
+			throws ServletException, IOException {
+		log.info("Id :" + id);
+		Optional<Produit> image = produitService.getImageById(id);
+		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+		response.getOutputStream().write(image.get().getImage());
+		response.getOutputStream().close();
+	}
+
+	//Administration : Supprime le produit (fonctionnalité non déployée car non demandée dans le cahier des charges mais pouvant faire l'objet d'une évolution future)
+/*
+	@Operation(description = "Supprime le produit")
+	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}/supprimer", method = RequestMethod.POST)
 
 	public RedirectView SupprimerProduit(Model model, @PathVariable("id") Long id) {
@@ -234,81 +288,6 @@ LOGGER.debug("produitTrouve : "+ produitTrouve.toString() );
 		RedirectView redirectView = new RedirectView("/administration", true);
 		return redirectView;
 	}
-
-	//Administration : Crée un produit
-@PostMapping("/administration/creerproduit")
-@SecurityRequirement(name = "securityScheme")
-public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie") Long idcategorie,
-													 @RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description, @RequestParam("libelle") String libelle,
-													 Model model, HttpServletRequest request
-		,final @RequestParam("image") MultipartFile file
-) {
-	log.debug("entrée dans le controleur");
-
-	try {
-
-		String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
-		log.info("uploadDirectory:: " + uploadDirectory);
-		String fileName = file.getOriginalFilename();
-		String filePath = Paths.get(uploadDirectory, fileName).toString();
-		log.info("FileName: " + file.getOriginalFilename());
-		if (fileName == null || fileName.contains("..")) {
-			model.addAttribute("invalid", "Sorry! Filename contains invalid path sequence " + fileName);
-			return new ResponseEntity<>("Sorry! Filename contains invalid path sequence " + fileName, HttpStatus.BAD_REQUEST);
-		}
-
-		try {
-			File dir = new File(uploadDirectory);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-
-			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
-			stream.write(file.getBytes());
-			stream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		}
-
-		byte[] image = file.getBytes();
-		Produit produit = new Produit();
-
-		produit.setLibelle(libelle);
-		produit.setImage(image);
-		log.info("image : " + produit.getImage().toString());
-		produit.setPrixDeBase(prixDeBase);
-		produit.setCategorie(categorieService.getById(idcategorie));
-
-		produit.setPromotion(null);
-		produit.setDescription(description);
-
-		produit.setDatecreation(new Date());
-		produitService.save(produit);
-
-		return new ResponseEntity<>("Product Saved With File - " +
-
-				"0"
-				, HttpStatus.OK);
-	} catch (Exception e) {
-		e.printStackTrace();
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-	}
-
-}
-
-//Affiche l'image du produit
-	@GetMapping("/image/produit/{id}")
-	@ResponseBody
-	void showImage(@PathVariable("id") Long id, HttpServletResponse response)
-			throws ServletException, IOException {
-		log.info("Id :: " + id);
-		Optional<Produit> image = produitService.getImageById(id);
-		response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
-		response.getOutputStream().write(image.get().getImage());
-		response.getOutputStream().close();
-	}
-
-
+*/
 }
 

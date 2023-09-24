@@ -7,10 +7,18 @@
   <title>Accueil</title>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
+
   <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+
+  <script type="text/javascript" src="/js/filtreCategorie.js"></script>
 
 </head>
 <body class="container">
+
+<!--barre de navigation-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="#">Mercadona</a>
@@ -35,11 +43,21 @@
 <h1 class="text-center">Mercadona</h1>
 <br>
 
-<table id="example" class="table table-striped table-bordered text-center">
+<!--Filtre par catégorie-->
+<label for="FiltreCategorie">Filtrer par catégorie :</label>
+<select class="form-control" id="FiltreCategorie" name="FiltreCategorie" >
+  <option value="">Sélectionnez une catégorie</option>
+  <th:block th:each="categorie : ${categories}">
+    <option th:value="${categorie.libelle}" th:text="${categorie.libelle}"></option>
+  </th:block>
+</select>
+
+<!--Liste des produits-->
+<table id="listeProduit" class="table table-striped table-bordered text-center">
   <thead>
   <tr>
     <th>ID</th>
-    <th>Nom</th>
+    <th>Libellé</th>
     <th>Catégorie</th>
     <th>Image</th>
     <th>Description</th>
@@ -70,10 +88,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-      $('#example').DataTable();
-  } );
-</script>
+
 </body>
 </html>

@@ -11,6 +11,7 @@
         rel="stylesheet">
 </head>
 <body class="container">
+<!--barre de navigation-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="#">Mercadona</a>
@@ -33,8 +34,8 @@
   </div>
 </nav>
 
+<!--Formulaire d'ajout d'une catégorie-->
 <h1>Ajouter une catégorie</h1>
-
 <form class="col card p-3 my-5" method="post" th:action="@{/administration/categorie}" th:object="${categorie_new}">
   <div class="form-group">
     <label for="libelle">Libellé</label>
@@ -52,6 +53,7 @@
 <div th:if="${erreurCategorie}" th:utext="${erreurCategorie}" class="alert alert-success text-center"></div>
 <div th:if="${categorieCreee}" th:utext="${categorieCreee}" class="alert alert-success text-center"></div>
 
+<!--Liste des catégories déjà crées-->
 <table class="table table-striped table-bordered " method="get" th:action="@{/}" th:object="${categories}">
   <tr>
     <th>ID</th>

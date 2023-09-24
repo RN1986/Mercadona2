@@ -9,13 +9,12 @@
   <title>Page d'accueil</title>
   <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css"
         rel="stylesheet">
-    <style>
-    .btn-block {
-      margin-bottom: 15px;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/style.css">
+
 </head>
 <body>
+
+<!--barre de navigation-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="#">Mercadona</a>
@@ -37,11 +36,13 @@
     </div>
   </div>
 </nav>
+
+<!--boutons des fonctionnalités d'administration-->
 <div class="container">
   <h1>Console d'administration</h1>
   <div class="row mt-5">
       <div class="col-md-6">
-      <a href="/administration/rechercherproduit" class="btn btn-primary btn-lg btn-block">Rechercher un produit (appliquer une promotion ou le supprimer)</a>
+      <a href="/administration/rechercherproduit" class="btn btn-primary btn-lg btn-block">Rechercher un produit (appliquer une promotion)</a>
     </div>
     <div class="col-md-6">
       <a href="/administration/creerproduit" class="btn btn-primary btn-lg btn-block">Ajouter un produit</a>

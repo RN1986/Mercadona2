@@ -31,7 +31,7 @@ public class CategorieController {
     @Operation(description = "Affiche la page de création d'une catégorie")
     @SecurityRequirement(name = "securityScheme")
     @RequestMapping(path = "/administration/categorie", method = RequestMethod.GET)
-    public String creerCategorie(Model model) {
+    public String AfficherPageCreerCategorie(Model model) {
         List<Categorie> categories = categorieService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("categorie_new", new Categorie());

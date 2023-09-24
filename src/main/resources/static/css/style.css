@@ -1,6 +1,11 @@
+/* applique le style rouge et gras au prix en promo */
 html,
 .promo {
   font-weight: bold;
   color: red;
 }
+/* espace les boutons de la console d'administration pour une meilleure lisibilité */
+.btn-block {
+      margin-bottom: 15px;
+    }
 
