@@ -21,8 +21,6 @@
 
         } else {
         	$("#submit").prop("disabled", false);
-        	 $("#error").html("Oops! dans le else");
-        	  $('#error').delay(10000).fadeOut('slow');
 
                     $.ajax({
                         type: 'POST',
@@ -46,7 +44,7 @@
                             console.error("Erreur AJAX :", e);
                             for (item of data){
                             console.log(item[0],item[1]);}
-
+        	                $("#error").html("Oops! dans le else");
                             $('#error').delay(10000).fadeOut('slow');
 
                         }
