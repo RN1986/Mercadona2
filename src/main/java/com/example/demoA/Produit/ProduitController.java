@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -70,7 +71,7 @@ private final AdministrateursService administrateursService;
 // Affiche la page Catalogue
 @Operation(description = "Affiche la page catalogue")
 	@GetMapping("/")
-	public String AfficherCatalogue(Model model) {
+public String AfficherCatalogue(Model model) {
 
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
@@ -79,6 +80,7 @@ private final AdministrateursService administrateursService;
 	List <Categorie> categories = categorieService.findAll();
 
 	model.addAttribute("categories", categories);
+
 		return "Catalogue";
 	}
 
@@ -86,7 +88,7 @@ private final AdministrateursService administrateursService;
 @Operation(description ="Affiche la page d'administration")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration"})
-	public String AfficherPageAccueilAdministration() {
+public String AfficherPageAccueilAdministration() {
 
 		return "AccueilAdministration";
 	}
@@ -95,7 +97,7 @@ private final AdministrateursService administrateursService;
 @Operation(description ="Affiche la page de création d'un produit")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration/creerproduit"})
-	public String AfficherPageAjoutProduit(Model model) {
+public String AfficherPageAjoutProduit(Model model) {
 
 		List <Categorie> categories = categorieService.findAll();
 		model.addAttribute("categories", categories);

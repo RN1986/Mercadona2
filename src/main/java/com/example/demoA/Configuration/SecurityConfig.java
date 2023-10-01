@@ -21,10 +21,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       http.authorizeRequests()
-                .antMatchers("/", "/administration/creerproduit", "/image/produit/**","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/css/style.css").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/", "/js/filtreCategorie.js", "/image/produit/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/css/style.css").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin() // Authentification via le formulaire de connexion
@@ -36,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/administrationlogout") // Spécifie l'URL de déconnexion
                 .and()
                 .httpBasic()
-               .and()
-               .csrf().disable().cors();
+                .and()
+                .csrf().disable().cors();
     }
 
     @Override
@@ -49,6 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    public String BCryptPasswordEncoder(String mdp) {
+        return BCryptPasswordEncoder(mdp);
+    }
+
 
 }
 

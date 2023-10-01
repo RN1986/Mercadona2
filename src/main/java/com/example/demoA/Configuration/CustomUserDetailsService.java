@@ -29,8 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public  UserDetails loadUserByUsername(String user) throws UsernameNotFoundException {
 
-        System.out.println("USER dans loedUser : " + user);
-
         Administrateurs administrateur = administrateursRepository.findByNomutilisateur(user);
 
         if (administrateur == null) {
