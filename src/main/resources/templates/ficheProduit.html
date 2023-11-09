@@ -108,23 +108,23 @@
 
 <!--script pour vérifier la cohérence des dates saisies dans le formulaire-->
 <script>
-          document.getElementById("submitBtn").addEventListener("click", function(event) {
+document.getElementById("submitBtn").addEventListener("click", function(event) {
   var datedebut = new Date(document.getElementById("datedebut").value);
   var datefin = new Date(document.getElementById("datefin").value);
   var currentDate = new Date();
   var dateError = document.getElementById("dateError");
 
-  if (datedebut <= currentDate) {
-  dateError.innerHTML ="La date de début doit être postérieure à la date actuelle.";
-  event.preventDefault(); // Empêche l'envoi du formulaire
+  if (datedebut.getTime() < currentDate.getTime()) {
+    dateError.innerHTML = "La date de début doit être postérieure ou égale à la date actuelle.";
+    event.preventDefault(); // Empêche l'envoi du formulaire
   } else if (datefin <= datedebut) {
-  dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
-  event.preventDefault(); // Empêche l'envoi du formulaire
+    dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
+    event.preventDefault(); // Empêche l'envoi du formulaire
+  } else {
+    dateError.innerHTML = ""; // Efface le message d'erreur précédent
+
   }
-  else {
-      dateError.innerHTML = ""; // Efface le message d'erreur s'il n'y en a pas
-    }
-  });
+});
   </script>
 
 </body>
