@@ -28,12 +28,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <li class="nav-item ">
           <a class="nav-link" href="/">Catalogue</a>
         </li>
       </ul>
       <ul class="navbar-nav">
-        <li class="nav-item">
+        <li class="nav-item active">
           <a class="nav-link" href="/administration">Administration<span class="sr-only">(current)</span></a>
         </li>
       </ul>
@@ -89,7 +89,6 @@
      <label for="remise">Promotion : remise (%)</label>
      <input class="form-control" id="remise" name="remise" type="number" required min="0" max="100"/>
    </div>
-
   <div class="form-group">
     <input id="submitBtn"class="btn btn-primary" type="submit" value="Appliquer la promotion" />
   </div>
@@ -108,23 +107,23 @@
 
 <!--script pour vérifier la cohérence des dates saisies dans le formulaire-->
 <script>
-          document.getElementById("submitBtn").addEventListener("click", function(event) {
+document.getElementById("submitBtn").addEventListener("click", function(event) {
   var datedebut = new Date(document.getElementById("datedebut").value);
   var datefin = new Date(document.getElementById("datefin").value);
   var currentDate = new Date();
   var dateError = document.getElementById("dateError");
 
-  if (datedebut <= currentDate) {
-  dateError.innerHTML ="La date de début doit être postérieure à la date actuelle.";
-  event.preventDefault(); // Empêche l'envoi du formulaire
+  if (datedebut.getTime() < currentDate.getTime()) {
+    dateError.innerHTML = "La date de début doit être postérieure ou égale à la date actuelle.";
+    event.preventDefault(); // Empêche l'envoi du formulaire
   } else if (datefin <= datedebut) {
-  dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
-  event.preventDefault(); // Empêche l'envoi du formulaire
+    dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
+    event.preventDefault(); // Empêche l'envoi du formulaire
+  } else {
+    dateError.innerHTML = ""; // Efface le message d'erreur précédent
+
   }
-  else {
-      dateError.innerHTML = ""; // Efface le message d'erreur s'il n'y en a pas
-    }
-  });
+});
   </script>
 
 </body>

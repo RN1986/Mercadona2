@@ -71,7 +71,7 @@ private final AdministrateursService administrateursService;
 // Affiche la page Catalogue
 @Operation(description = "Affiche la page catalogue")
 	@GetMapping("/")
-public String AfficherCatalogue(Model model) {
+public String getAfficherCatalogue(Model model) {
 
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
@@ -88,7 +88,7 @@ public String AfficherCatalogue(Model model) {
 @Operation(description ="Affiche la page d'administration")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration"})
-public String AfficherPageAccueilAdministration() {
+public String getAfficherPageAccueilAdministration() {
 
 		return "AccueilAdministration";
 	}
@@ -97,7 +97,7 @@ public String AfficherPageAccueilAdministration() {
 @Operation(description ="Affiche la page de création d'un produit")
 @SecurityRequirement(name = "securityScheme")
 	@GetMapping(value = {"/administration/creerproduit"})
-public String AfficherPageAjoutProduit(Model model) {
+public String getAfficherPageAjoutProduit(Model model) {
 
 		List <Categorie> categories = categorieService.findAll();
 		model.addAttribute("categories", categories);
@@ -107,7 +107,7 @@ public String AfficherPageAjoutProduit(Model model) {
 //Administration : Crée un produit
 	@PostMapping("/administration/creerproduit")
 	@SecurityRequirement(name = "securityScheme")
-	public @ResponseBody ResponseEntity<?> creerProduit(@RequestParam("idcategorie") Long idcategorie,
+	public @ResponseBody ResponseEntity<?> postCreerProduit(@RequestParam("idcategorie") Long idcategorie,
 														@RequestParam("prixDeBase") double prixDeBase, @RequestParam("description") String description, @RequestParam("libelle") String libelle,
 														Model model, HttpServletRequest request
 			,final @RequestParam("image") MultipartFile file
@@ -170,7 +170,7 @@ public String AfficherPageAjoutProduit(Model model) {
 	@Operation(description ="Affiche la page de recherche d'un produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/rechercherproduit", method = RequestMethod.GET)
-	public String AfficherPageRechercherProduit(Model model) {
+	public String getAfficherPageRechercherProduit(Model model) {
 		List<Produit> produits = produitService.findAll();
 		model.addAttribute("produits", produits);
 		model.addAttribute("produit_new", new Produit());
@@ -183,7 +183,7 @@ public String AfficherPageAjoutProduit(Model model) {
 	@Operation(description ="Affiche les résultats de recherche d'un produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/rechercherproduit", method = RequestMethod.POST)
-	public String trouverProduit(Model model, @RequestParam("libelle") String libelle, @RequestParam("id") String id) {
+	public String postRechercherProduit(Model model, @RequestParam("libelle") String libelle, @RequestParam("id") String id) {
 		model.addAttribute("produit_new", new Produit());
 		model.addAttribute("produitService", produitService);
 
@@ -226,7 +226,7 @@ public String AfficherPageAjoutProduit(Model model) {
 	@Operation(description ="Affiche la fiche produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.GET)
-	public String afficherFicheProduit(Model model, @PathVariable("id") Long id) {
+	public String getAfficherFicheProduit(Model model, @PathVariable("id") Long id) {
 
 		model.addAttribute("produit", produitService.findById(id));
 		model.addAttribute("updatedProduit", produitService.findById(id));
@@ -242,9 +242,8 @@ public String AfficherPageAjoutProduit(Model model) {
 @Operation(description = "Applique une promotion au produit")
 @SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}/promotion", method = RequestMethod.POST)
-	public RedirectView appliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
+	public RedirectView postAppliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
 										@RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
-
 		LocalDate datedebut = LocalDate.parse(datedebutStr);
 		LocalDate datefin = LocalDate.parse(datefinStr);
 		model.addAttribute("produitService", produitService);
@@ -254,7 +253,7 @@ public String AfficherPageAjoutProduit(Model model) {
 		promoProduit.setPromotion(new Promotion(datedebut, datefin, remise,new Date()));
 
 		produitService.update(promoProduit);
-
+	log.info("zzz" + promoProduit.getPromotion());
 		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
 		return redirectView;
 	}
@@ -263,7 +262,7 @@ public String AfficherPageAjoutProduit(Model model) {
 //Affiche l'image du produit
 	@GetMapping("/image/produit/{id}")
 	@ResponseBody
-	void afficherImage(@PathVariable("id") Long id, HttpServletResponse response)
+	void getAfficherImage(@PathVariable("id") Long id, HttpServletResponse response)
 			throws ServletException, IOException {
 		log.info("Id :" + id);
 		Optional<Produit> image = produitService.getImageById(id);

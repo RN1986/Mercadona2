@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/js/filtreCategorie.js", "/image/produit/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/css/style.css").permitAll()
+                .antMatchers("/", "/js/filtreCategorie.js", "/image/produit/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/css/style.css","/currentDate").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin() // Authentification via le formulaire de connexion

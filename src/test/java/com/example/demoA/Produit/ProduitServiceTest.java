@@ -44,7 +44,7 @@ public class ProduitServiceTest {
         double prixEnCours = produitService.calculerPrixEnCours(produit);
 
         // Le prix en cours devrait être de 90 euros (remise de 10% appliquée)
-        assertEquals(90.0, prixEnCours, 0.01); // Utilisez une marge d'erreur (delta) pour les comparaisons de nombres flottants.
+        assertEquals(90.0, prixEnCours, 0.01);
     }
 
     @Test
