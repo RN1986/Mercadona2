@@ -113,10 +113,7 @@ document.getElementById("submitBtn").addEventListener("click", function(event) {
   var currentDate = new Date();
   var dateError = document.getElementById("dateError");
 
-  if (datedebut.getTime() < currentDate.getTime()) {
-    dateError.innerHTML = "La date de début doit être postérieure ou égale à la date actuelle.";
-    event.preventDefault(); // Empêche l'envoi du formulaire
-  } else if (datefin <= datedebut) {
+else if (datefin <= datedebut) {
     dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
     event.preventDefault(); // Empêche l'envoi du formulaire
   } else {
