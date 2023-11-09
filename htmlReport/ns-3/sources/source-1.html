@@ -1,0 +1,155 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Categorie</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demoA.Categorie</a>
+</div>
+
+<h1>Coverage Summary for Class: Categorie (com.example.demoA.Categorie)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Categorie</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (4/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (6/9)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Categorie$HibernateProxy$jVVF8qkU</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (4/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66,7%
+  </span>
+  <span class="absValue">
+    (6/9)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demoA.Categorie;
+&nbsp;
+&nbsp;import lombok.Data;
+&nbsp;
+&nbsp;import javax.persistence.Entity;
+&nbsp;import javax.persistence.GeneratedValue;
+&nbsp;import javax.persistence.GenerationType;
+&nbsp;import javax.persistence.Id;
+<b class="nc">&nbsp;@Data</b>
+&nbsp;@Entity
+&nbsp;
+&nbsp;public class Categorie {
+&nbsp;
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private Long idcategorie;
+&nbsp;    private String libelle;
+&nbsp;
+<b class="fc">&nbsp;    public Categorie(Long idcategorie, String libelle) {</b>
+<b class="fc">&nbsp;        this.idcategorie = idcategorie;</b>
+<b class="fc">&nbsp;        this.libelle = libelle;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Categorie() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Long getIdcategorie() {
+<b class="fc">&nbsp;        return idcategorie;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setIdcategorie(Long idcategorie) {
+<b class="nc">&nbsp;        this.idcategorie = idcategorie;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getLibelle() {
+<b class="fc">&nbsp;        return libelle;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLibelle(String libelle) {
+<b class="nc">&nbsp;        this.libelle = libelle;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-09-10 20:44</div>
+</div>
+</body>
+</html>

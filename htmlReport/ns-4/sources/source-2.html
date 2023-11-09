@@ -1,0 +1,569 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ProduitController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demoA.Produit</a>
+</div>
+
+<h1>Coverage Summary for Class: ProduitController (com.example.demoA.Produit)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProduitController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    8,3%
+  </span>
+  <span class="absValue">
+    (1/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6,7%
+  </span>
+  <span class="absValue">
+    (8/119)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demoA.Produit;
+&nbsp;
+&nbsp;import java.io.BufferedOutputStream;
+&nbsp;import java.io.File;
+&nbsp;import java.io.FileOutputStream;
+&nbsp;import java.io.IOException;
+&nbsp;import java.nio.file.Files;
+&nbsp;import java.nio.file.Paths;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;import javax.servlet.ServletException;
+&nbsp;import javax.servlet.http.HttpServletRequest;
+&nbsp;import javax.servlet.http.HttpServletResponse;
+&nbsp;import javax.servlet.http.HttpSession;
+&nbsp;
+&nbsp;import com.example.demoA.Administrateurs.Administrateurs;
+&nbsp;import com.example.demoA.Administrateurs.AdministrateursService;
+&nbsp;import com.example.demoA.Categorie.Categorie;
+&nbsp;import com.example.demoA.Categorie.CategorieRepository;
+&nbsp;import com.example.demoA.Categorie.CategorieService;
+&nbsp;import com.example.demoA.Promotion.Promotion;
+&nbsp;import com.example.demoA.Promotion.PromotionService;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.format.annotation.DateTimeFormat;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.ui.Model;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;import org.springframework.web.multipart.MultipartFile;
+&nbsp;import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+&nbsp;import org.springframework.web.servlet.view.RedirectView;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;import static org.hibernate.tool.schema.SchemaToolingLogging.LOGGER;
+&nbsp;
+&nbsp;@Controller
+&nbsp;public class ProduitController {
+&nbsp;
+&nbsp;	@Value(&quot;${uploadDir}&quot;)
+&nbsp;	private String uploadFolder;
+&nbsp;@Autowired
+&nbsp;	private final ProduitService produitService;
+&nbsp;private final AdministrateursService administrateursService;
+&nbsp;	private final CategorieService categorieService;
+&nbsp;
+&nbsp;	private final PromotionService promotionService;
+&nbsp;
+<b class="fc">&nbsp;	private final Logger log = LoggerFactory.getLogger(this.getClass());</b>
+&nbsp;	private final ProduitRepository produitRepository;
+&nbsp;	private final CategorieRepository categorieRepository;
+&nbsp;
+&nbsp;	public ProduitController(ProduitService produitService, AdministrateursService administrateursService, CategorieService categorieService, PromotionService promotionService,
+&nbsp;							 ProduitRepository produitRepository,
+<b class="fc">&nbsp;							 CategorieRepository categorieRepository) {</b>
+&nbsp;		//this.uploadFolder = uploadFolder;
+<b class="fc">&nbsp;		this.produitService = produitService;</b>
+<b class="fc">&nbsp;		this.administrateursService = administrateursService;</b>
+<b class="fc">&nbsp;		this.categorieService = categorieService;</b>
+<b class="fc">&nbsp;		this.promotionService = promotionService;</b>
+<b class="fc">&nbsp;		this.produitRepository = produitRepository;</b>
+<b class="fc">&nbsp;		this.categorieRepository = categorieRepository;</b>
+&nbsp;	}
+&nbsp;// Affiche la page Catalogue
+&nbsp;	@GetMapping(&quot;/&quot;)
+&nbsp;	public String catalogue(Model model) {
+&nbsp;
+<b class="nc">&nbsp;		List&lt;Produit&gt; produits = produitService.findAll();</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produits&quot;, produits);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;,produitService);</b>
+&nbsp;		//System.out.println(hashPassword(&quot;mdp&quot;));
+<b class="nc">&nbsp;		return &quot;Catalogue&quot;;</b>
+&nbsp;	}
+&nbsp;/*
+&nbsp;	private String hashPassword(String mdp) {
+&nbsp;		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+&nbsp;		return encoder.encode(mdp);
+&nbsp;	}*/
+&nbsp;/*
+&nbsp;	// Affiche la page d&#39;authentification pour accéder à l&#39;espace d&#39;administration
+&nbsp;	@GetMapping(value = {&quot;/administrationauthentification&quot;})
+&nbsp;	public String AuthentificationAdministrationGET(){
+&nbsp;		return &quot;authentification&quot;;
+&nbsp;	}
+&nbsp;*/
+&nbsp;	/*
+&nbsp;	Map&lt;String, String&gt; passwords = new HashMap(); //Contient le mot de passe associé à chaque utilisateur
+&nbsp;
+&nbsp;	public void passwordsInit() {
+&nbsp;			List&lt;Administrateurs&gt; administrateurs = administrateursService.findAll();
+&nbsp;			for (Administrateurs administrateur : administrateurs) {
+&nbsp;				passwords.put(administrateur.getNomutilisateur(), administrateur.getMotdepasse());
+&nbsp;			}
+&nbsp;		}
+&nbsp;		*/
+&nbsp;/*
+&nbsp;	// Ne pas stocker les mots de passe dans une structure de données en mémoire
+&nbsp;
+&nbsp;	// Modifier la méthode AuthentificationAdministration() pour utiliser le hachage cryptographique
+&nbsp;	@PostMapping(value = {&quot;/administrationauthentification&quot;})
+&nbsp;	public String AuthentificationAdministration(@RequestParam(value = &quot;user&quot;) String user,
+&nbsp;												 @RequestParam(value = &quot;password&quot;) String password,
+&nbsp;												 HttpSession session,
+&nbsp;												 Model model) {
+&nbsp;		// Récupérez le mot de passe haché associé à l&#39;utilisateur depuis la base de données
+&nbsp;		String motDePasseHacheEnBase = administrateursService.getMotDePasseHache(user);
+&nbsp;
+&nbsp;		if (motDePasseHacheEnBase != null &amp;&amp; bcrypt.checkpw(password, motDePasseHacheEnBase)) {
+&nbsp;			// L&#39;utilisateur est authentifié, enregistre l&#39;état de l&#39;authentification dans la session
+&nbsp;			session.setAttribute(&quot;authenticated&quot;, true);
+&nbsp;			return &quot;AccueilAdministration&quot;;
+&nbsp;		} else {
+&nbsp;			model.addAttribute(&quot;erreurAuthentification&quot;, &quot;Le nom d&#39;utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau&quot;);
+&nbsp;			// L&#39;utilisateur n&#39;est pas authentifié, renvoie à la page d&#39;authentification
+&nbsp;			return &quot;authentification&quot;;
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;*/
+&nbsp;/*
+&nbsp;//Verifie l&#39;authentification du profil administrateur et dirige vers l&#39;espace d&#39;administration le cas échéant
+&nbsp;@PostMapping(value = {&quot;/administrationauthentification&quot;})
+&nbsp;public String AuthentificationAdministration(@RequestParam(value = &quot;user&quot;) String user,@RequestParam(value = &quot;password&quot;) String password, HttpSession session, Model model) {
+&nbsp;	passwordsInit();
+&nbsp;
+&nbsp;	if (passwords.containsKey(user) &amp;&amp; passwords.get(user).equals(password)) {
+&nbsp;		// L&#39;utilisateur est authentifié, enregistre l&#39;état de l&#39;authentification dans la session
+&nbsp;		session.setAttribute(&quot;authenticated&quot;, true);
+&nbsp;		return &quot;AccueilAdministration&quot;;
+&nbsp;	} else {
+&nbsp;		model.addAttribute(&quot;erreurAuthentification&quot;, &quot;Le nom d&#39;utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau&quot;);
+&nbsp;		// L&#39;utilisateur n&#39;est pas authentifié, renvoie à la page d&#39;authentification
+&nbsp;		return &quot;authentification&quot;;
+&nbsp;	}
+&nbsp;}
+&nbsp;*/
+&nbsp;	/*
+&nbsp;//Administration : Ferme la session d&#39;administration
+&nbsp;	@PostMapping(value = {&quot;/administrationlogout&quot;})
+&nbsp;	public String DésauthentificationAdministration( HttpSession session) {
+&nbsp;
+&nbsp;			// L&#39;utilisateur est désauthentifié, enregistre l&#39;état de l&#39;authentification dans la session
+&nbsp;			session.setAttribute(&quot;authenticated&quot;, null);
+&nbsp;			return &quot;authentification&quot;;
+&nbsp;
+&nbsp;	}
+&nbsp;*/
+&nbsp;//Administration : Affiche la page d&#39;administration
+&nbsp;	@GetMapping(value = {&quot;/administration&quot;})
+&nbsp;	public String AccueilAdministrationGET() {
+&nbsp;
+<b class="nc">&nbsp;		return &quot;AccueilAdministration&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;/*
+&nbsp;	@PostMapping(value = {&quot;/administration&quot;})
+&nbsp;	public String AccueilAdministrationPOST() {
+&nbsp;		return &quot;AccueilAdministration&quot;;
+&nbsp;	}
+&nbsp;*/
+&nbsp;
+&nbsp;//Administration : Affiche la page de création d&#39;un produit
+&nbsp;	@GetMapping(value = {&quot;/administration/creerproduit&quot;})
+&nbsp;	public String ajoutProduit(Model model) {
+&nbsp;		//model.addAttribute(&quot;produit_new&quot;, new Produit());
+&nbsp;		//List&lt;Produit&gt; produits = produitService.findAll();
+&nbsp;		//model.addAttribute(&quot;produits&quot;, produits);
+<b class="nc">&nbsp;		List &lt;Categorie&gt; categories = categorieService.findAll();</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;categories&quot;, categories);</b>
+<b class="nc">&nbsp;		return &quot;CreerProduit&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	//Administration : Affiche la page de recherche d&#39;un produit
+&nbsp;	@RequestMapping(path = &quot;/administration/rechercherproduit&quot;, method = RequestMethod.GET)
+&nbsp;	public String RechercherProduit(Model model) {
+<b class="nc">&nbsp;		List&lt;Produit&gt; produits = produitService.findAll();</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produits&quot;, produits);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produit_new&quot;, new Produit());</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;,produitService);</b>
+&nbsp;
+<b class="nc">&nbsp;		return &quot;RechercherProduit&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	//Administration : Affiche les résultats de recherche d&#39;un produit
+&nbsp;	@RequestMapping(path = &quot;/administration/rechercherproduit&quot;, method = RequestMethod.POST)
+&nbsp;	public String trouverProduit(Model model, @ModelAttribute(&quot;libelle&quot;) String libelle, @ModelAttribute(&quot;id&quot;) String id) {
+<b class="nc">&nbsp;		model.addAttribute(&quot;produit_new&quot;, new Produit());</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;, produitService);</b>
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			Long productId = null;</b>
+<b class="nc">&nbsp;			if (id != null &amp;&amp; !id.isEmpty()) {</b>
+<b class="nc">&nbsp;				productId = Long.parseLong(id);</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			List&lt;Produit&gt; produitsTrouves = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;			if (productId == null &amp;&amp; libelle.isEmpty()) {</b>
+<b class="nc">&nbsp;				return &quot;RechercherProduit&quot;;</b>
+<b class="nc">&nbsp;			} else if (productId != null &amp;&amp; libelle.isEmpty()) {</b>
+<b class="nc">&nbsp;				Produit produitTrouve = produitService.getById(productId);</b>
+<b class="nc">&nbsp;LOGGER.debug(&quot;produitTrouve : &quot;+ produitTrouve.toString() );</b>
+<b class="nc">&nbsp;				if (produitTrouve != null) {</b>
+<b class="nc">&nbsp;					produitsTrouves.add(produitTrouve);</b>
+<b class="nc">&nbsp;					model.addAttribute(&quot;produitsTrouves&quot;, produitsTrouves);</b>
+&nbsp;				}
+<b class="nc">&nbsp;				else return &quot;RechercherProduit&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;			} else if (productId==null &amp;&amp; !libelle.isEmpty()) {</b>
+<b class="nc">&nbsp;				produitsTrouves = produitService.getByLibelle(libelle);</b>
+<b class="nc">&nbsp;				LOGGER.debug(&quot;produitsTrouves : &quot;+ produitsTrouves.toString() );</b>
+<b class="nc">&nbsp;				model.addAttribute(&quot;produitsTrouves&quot;, produitsTrouves);</b>
+&nbsp;			} else {
+<b class="nc">&nbsp;				return &quot;RechercherProduit&quot;;</b>
+&nbsp;			}
+&nbsp;
+<b class="nc">&nbsp;			List&lt;Categorie&gt; categories = categorieService.findAll();</b>
+<b class="nc">&nbsp;			model.addAttribute(&quot;categories&quot;, categories);</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			return &quot;RechercherProduit&quot;;</b>
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		return &quot;RechercherProduit&quot;;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	//Administration : Affiche la fiche produit
+&nbsp;	@RequestMapping(path = &quot;/administration/produit/{id}&quot;, method = RequestMethod.GET)
+&nbsp;	public String FicheProduit(Model model, @PathVariable(&quot;id&quot;) Long id) {
+&nbsp;
+<b class="nc">&nbsp;		model.addAttribute(&quot;produit&quot;, produitService.findById(id));</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;updatedProduit&quot;, produitService.findById(id));</b>
+<b class="nc">&nbsp;		List &lt;Categorie&gt; categories = categorieService.findAll();</b>
+<b class="nc">&nbsp;		categories.remove(categorieService.getSelonLibelle(produitService.findById(id).getCategorie().getLibelle()));</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;categories&quot;, categories);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;,produitService);</b>
+&nbsp;
+<b class="nc">&nbsp;		return &quot;ficheProduit&quot;;</b>
+&nbsp;	}
+&nbsp;//Administration : Modifie le produit
+&nbsp;	@RequestMapping(path = &quot;/administration/produit/{id}&quot;, method = RequestMethod.POST)
+&nbsp;	public RedirectView ModifierProduit(RedirectAttributes redirectAttributes,Model model, @PathVariable(&quot;id&quot;) Long id, @RequestParam(&quot;libelle&quot;)String libelle,
+&nbsp;										@RequestParam(&quot;description&quot;)String description, @RequestParam(&quot;categorie&quot;)String categorie, @RequestParam(&quot;prixDeBase&quot;)String prixDeBase) {
+&nbsp;
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;, produitService);</b>
+<b class="nc">&nbsp;		Produit updatedProduit = produitService.findById(id);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;updatedProduit&quot;, updatedProduit);</b>
+<b class="nc">&nbsp;		List &lt;Categorie&gt; categories = categorieService.findAll();</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;categories&quot;, categories);</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;		updatedProduit.setLibelle(libelle);</b>
+<b class="nc">&nbsp;		updatedProduit.setDescription(description);</b>
+&nbsp;
+&nbsp;		//updatedProduit.setPromotion(new Promotion(datedebut, datefin, remise));
+<b class="nc">&nbsp;		updatedProduit.setCategorie(categorieService.getSelonLibelle(categorie));</b>
+<b class="nc">&nbsp;		updatedProduit.setPrixDeBase(Double.parseDouble(prixDeBase));</b>
+&nbsp;
+<b class="nc">&nbsp;		produitService.update(updatedProduit);</b>
+&nbsp;
+<b class="nc">&nbsp;		RedirectView redirectView = new RedirectView(&quot;/administration&quot;, true);</b>
+<b class="nc">&nbsp;		return redirectView;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;//Administration : Applique une promotion au produit
+&nbsp;	@RequestMapping(path = &quot;/administration/produit/{id}/promotion&quot;, method = RequestMethod.POST)
+&nbsp;	public RedirectView AppliquerPromo(Model model, @PathVariable(&quot;id&quot;) Long id, @RequestParam(&quot;datedebut&quot;)@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) String datedebutStr,
+&nbsp;										@RequestParam(&quot;datefin&quot;)@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) String datefinStr, @RequestParam(&quot;remise&quot;)int remise) {
+&nbsp;
+<b class="nc">&nbsp;		LocalDate datedebut = LocalDate.parse(datedebutStr);</b>
+<b class="nc">&nbsp;		LocalDate datefin = LocalDate.parse(datefinStr);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;, produitService);</b>
+<b class="nc">&nbsp;		Produit promoProduit = produitService.findById(id);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;promoProduit&quot;, promoProduit);</b>
+&nbsp;
+<b class="nc">&nbsp;		promoProduit.setPromotion(new Promotion(datedebut, datefin, remise));</b>
+&nbsp;
+<b class="nc">&nbsp;		produitService.update(promoProduit);</b>
+&nbsp;
+<b class="nc">&nbsp;		RedirectView redirectView = new RedirectView(&quot;/administration/produit/{id}&quot;, true);</b>
+<b class="nc">&nbsp;		return redirectView;</b>
+&nbsp;	}
+&nbsp;//Administration : Supprime le produit
+&nbsp;	@RequestMapping(path = &quot;/administration/produit/{id}/supprimer&quot;, method = RequestMethod.POST)
+&nbsp;	public RedirectView SupprimerProduit(Model model, @PathVariable(&quot;id&quot;) Long id) {
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;		model.addAttribute(&quot;produitService&quot;, produitService);</b>
+<b class="nc">&nbsp;		Produit produit = produitService.findById(id);</b>
+<b class="nc">&nbsp;		model.addAttribute(&quot;produit&quot;, produit);</b>
+&nbsp;
+<b class="nc">&nbsp;		produitService.deleteById(id);</b>
+&nbsp;
+<b class="nc">&nbsp;		RedirectView redirectView = new RedirectView(&quot;/administration&quot;, true);</b>
+<b class="nc">&nbsp;		return redirectView;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	//Administration : Crée un produit
+&nbsp;@PostMapping(&quot;/image/saveImageDetails&quot;)
+&nbsp;public @ResponseBody ResponseEntity&lt;?&gt; creerProduit(@RequestParam(&quot;idcategorie&quot;) Long idcategorie,
+&nbsp;													 @RequestParam(&quot;prixDeBase&quot;) double prixDeBase, @RequestParam(&quot;description&quot;) String description, @RequestParam(&quot;libelle&quot;) String libelle,
+&nbsp;													 Model model, HttpServletRequest request
+&nbsp;		,final @RequestParam(&quot;image&quot;) MultipartFile file
+&nbsp;) {
+<b class="nc">&nbsp;	log.debug(&quot;entrée dans le controleur&quot;);</b>
+&nbsp;
+&nbsp;	try {
+&nbsp;
+<b class="nc">&nbsp;		String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);</b>
+<b class="nc">&nbsp;		log.info(&quot;uploadDirectory:: &quot; + uploadDirectory);</b>
+<b class="nc">&nbsp;		String fileName = file.getOriginalFilename();</b>
+<b class="nc">&nbsp;		String filePath = Paths.get(uploadDirectory, fileName).toString();</b>
+<b class="nc">&nbsp;		log.info(&quot;FileName: &quot; + file.getOriginalFilename());</b>
+<b class="nc">&nbsp;		if (fileName == null || fileName.contains(&quot;..&quot;)) {</b>
+<b class="nc">&nbsp;			model.addAttribute(&quot;invalid&quot;, &quot;Sorry! Filename contains invalid path sequence &quot; + fileName);</b>
+<b class="nc">&nbsp;			return new ResponseEntity&lt;&gt;(&quot;Sorry! Filename contains invalid path sequence &quot; + fileName, HttpStatus.BAD_REQUEST);</b>
+&nbsp;		}
+&nbsp;		/*
+&nbsp;		String[] libelles = libelle.split(&quot;,&quot;);
+&nbsp;		String[] descriptions = description.split(&quot;,&quot;);
+&nbsp;		*/
+&nbsp;
+&nbsp;		try {
+<b class="nc">&nbsp;			File dir = new File(uploadDirectory);</b>
+<b class="nc">&nbsp;			if (!dir.exists()) {</b>
+<b class="nc">&nbsp;				dir.mkdirs();</b>
+&nbsp;			}
+&nbsp;
+&nbsp;			// Save the file locally
+&nbsp;			//BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()));
+<b class="nc">&nbsp;			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));</b>
+<b class="nc">&nbsp;			stream.write(file.getBytes());</b>
+<b class="nc">&nbsp;			stream.close();</b>
+<b class="nc">&nbsp;		} catch (Exception e) {</b>
+<b class="nc">&nbsp;			e.printStackTrace();</b>
+&nbsp;
+<b class="nc">&nbsp;		}</b>
+&nbsp;
+<b class="nc">&nbsp;		byte[] image = file.getBytes();</b>
+<b class="nc">&nbsp;		Produit produit = new Produit();</b>
+&nbsp;		//produit.setLibelle(libelles[0]);
+<b class="nc">&nbsp;		produit.setLibelle(libelle);</b>
+<b class="nc">&nbsp;		produit.setImage(image);</b>
+<b class="nc">&nbsp;		log.info(&quot;image : &quot; + produit.getImage().toString());</b>
+<b class="nc">&nbsp;		produit.setPrixDeBase(prixDeBase);</b>
+<b class="nc">&nbsp;		produit.setCategorie(categorieService.getById(idcategorie));</b>
+&nbsp;		//produit.setCategorie(categorieService.getSelonLibelle(categorie));
+<b class="nc">&nbsp;		produit.setPromotion(null);</b>
+<b class="nc">&nbsp;		produit.setDescription(description);</b>
+&nbsp;		//produit.setDescription(descriptions[0]);
+<b class="nc">&nbsp;		produit.setDatecreation(new Date());</b>
+<b class="nc">&nbsp;		produitService.save(produit);</b>
+&nbsp;
+<b class="nc">&nbsp;		return new ResponseEntity&lt;&gt;(&quot;Product Saved With File - &quot; +</b>
+&nbsp;				//fileName
+&nbsp;				&quot;0&quot;
+&nbsp;				, HttpStatus.OK);
+<b class="nc">&nbsp;	} catch (Exception e) {</b>
+<b class="nc">&nbsp;		e.printStackTrace();</b>
+<b class="nc">&nbsp;		return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;}
+&nbsp;
+&nbsp;/*
+&nbsp;	//Administration : Crée un produit
+&nbsp;	@PostMapping(&quot;/image/saveImageDetailsmaj/{id}&quot;)
+&nbsp;	public @ResponseBody ResponseEntity&lt;?&gt; creerProduit( @PathVariable(&quot;id&quot;) Long id,@RequestParam(&quot;datedebut&quot;)@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) String datedebutStr,
+&nbsp;														@RequestParam(&quot;datefin&quot;)@DateTimeFormat(pattern = &quot;yyyy-MM-dd&quot;) String datefinStr,
+&nbsp;														@RequestParam(&quot;remise&quot;)int remise,@RequestParam(&quot;idcategorie&quot;) Long idcategorie,
+&nbsp;														@RequestParam(&quot;prixDeBase&quot;) double prixDeBase, @RequestParam(&quot;description&quot;) String description,
+&nbsp;														@RequestParam(&quot;libelle&quot;) String libelle,
+&nbsp;														Model model, HttpServletRequest request
+&nbsp;			,final @RequestParam(&quot;image&quot;) MultipartFile file
+&nbsp;	) {
+&nbsp;		log.debug(&quot;entrée dans le controleur&quot;);
+&nbsp;
+&nbsp;		try {
+&nbsp;
+&nbsp;			String uploadDirectory = request.getServletContext().getRealPath(uploadFolder);
+&nbsp;			log.info(&quot;uploadDirectory:: &quot; + uploadDirectory);
+&nbsp;			String fileName = file.getOriginalFilename();
+&nbsp;			String filePath = Paths.get(uploadDirectory, fileName).toString();
+&nbsp;			log.info(&quot;FileName: &quot; + file.getOriginalFilename());
+&nbsp;			if (fileName == null || fileName.contains(&quot;..&quot;)) {
+&nbsp;				model.addAttribute(&quot;invalid&quot;, &quot;Sorry! Filename contains invalid path sequence &quot; + fileName);
+&nbsp;				return new ResponseEntity&lt;&gt;(&quot;Sorry! Filename contains invalid path sequence &quot; + fileName, HttpStatus.BAD_REQUEST);
+&nbsp;			}
+&nbsp;		/*
+&nbsp;		String[] libelles = libelle.split(&quot;,&quot;);
+&nbsp;		String[] descriptions = description.split(&quot;,&quot;);
+&nbsp;
+&nbsp;
+&nbsp;			try {
+&nbsp;				File dir = new File(uploadDirectory);
+&nbsp;				if (!dir.exists()) {
+&nbsp;					dir.mkdirs();
+&nbsp;				}
+&nbsp;
+&nbsp;				// Save the file locally
+&nbsp;				//BufferedOutputStream stream = new BufferedOutputStream(Files.newOutputStream(new File(filePath).toPath()));
+&nbsp;				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath)));
+&nbsp;				stream.write(file.getBytes());
+&nbsp;				stream.close();
+&nbsp;			} catch (Exception e) {
+&nbsp;				e.printStackTrace();
+&nbsp;
+&nbsp;			}
+&nbsp;			model.addAttribute(&quot;produitService&quot;, produitService);
+&nbsp;			Produit produitMaj = produitService.getById(id);
+&nbsp;			model.addAttribute(&quot;ProduitMaj&quot;, produitMaj);
+&nbsp;			if (datedebutStr != null &amp;&amp; datefinStr != null &amp;&amp; remise != 0) {
+&nbsp;				LocalDate datedebut = LocalDate.parse(datedebutStr);
+&nbsp;				LocalDate datefin = LocalDate.parse(datefinStr);
+&nbsp;				produitMaj.setPromotion(new Promotion(datedebut, datefin, remise));
+&nbsp;			}
+&nbsp;			else 		produitMaj.setPromotion(null);
+&nbsp;			produitService.update(produitMaj);
+&nbsp;
+&nbsp;	//		RedirectView redirectView = new RedirectView(&quot;/administration/produit/{id}&quot;, true);
+&nbsp;
+&nbsp;			byte[] image = file.getBytes();
+&nbsp;
+&nbsp;			//produit.setLibelle(libelles[0]);
+&nbsp;			produitMaj.setLibelle(libelle);
+&nbsp;			produitMaj.setImage(image);
+&nbsp;			log.info(&quot;image : &quot; + produitMaj.getImage().toString());
+&nbsp;			produitMaj.setPrixDeBase(prixDeBase);
+&nbsp;			produitMaj.setCategorie(categorieService.getById(idcategorie));
+&nbsp;			//produit.setCategorie(categorieService.getSelonLibelle(categorie));
+&nbsp;
+&nbsp;			produitMaj.setDescription(description);
+&nbsp;			//produit.setDescription(descriptions[0]);
+&nbsp;			//produit.setDatecreation(new Date());
+&nbsp;			produitService.save(produitMaj);
+&nbsp;
+&nbsp;			return new ResponseEntity&lt;&gt;(&quot;Product Saved With File - &quot; +
+&nbsp;					//fileName
+&nbsp;					&quot;0&quot;
+&nbsp;					, HttpStatus.OK);
+&nbsp;		} catch (Exception e) {
+&nbsp;			e.printStackTrace();
+&nbsp;			return new ResponseEntity&lt;&gt;(HttpStatus.BAD_REQUEST);
+&nbsp;		}
+&nbsp;
+&nbsp;	}
+&nbsp;*/
+&nbsp;//Affiche l&#39;image du produit
+&nbsp;	@GetMapping(&quot;/image/display/{id}&quot;)
+&nbsp;	@ResponseBody
+&nbsp;	void showImage(@PathVariable(&quot;id&quot;) Long id, HttpServletResponse response)
+&nbsp;			throws ServletException, IOException {
+<b class="nc">&nbsp;		log.info(&quot;Id :: &quot; + id);</b>
+<b class="nc">&nbsp;		Optional&lt;Produit&gt; image = produitService.getImageById(id);</b>
+<b class="nc">&nbsp;		response.setContentType(&quot;image/jpeg, image/jpg, image/png, image/gif&quot;);</b>
+<b class="nc">&nbsp;		response.getOutputStream().write(image.get().getImage());</b>
+<b class="nc">&nbsp;		response.getOutputStream().close();</b>
+&nbsp;	}
+&nbsp;
+&nbsp;
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-09-10 20:44</div>
+</div>
+</body>
+</html>

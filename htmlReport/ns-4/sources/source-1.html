@@ -1,0 +1,255 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > Produit</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demoA.Produit</a>
+</div>
+
+<h1>Coverage Summary for Class: Produit (com.example.demoA.Produit)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Produit</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (6/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26,7%
+  </span>
+  <span class="absValue">
+    (8/30)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Produit$HibernateProxy$Oh0NXQAF</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (6/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    26,7%
+  </span>
+  <span class="absValue">
+    (8/30)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demoA.Produit;
+&nbsp;
+&nbsp;import com.example.demoA.Categorie.Categorie;
+&nbsp;import com.example.demoA.Promotion.Promotion;
+&nbsp;import org.hibernate.annotations.Cascade;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.Date;
+&nbsp;import javax.persistence.*;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Table(name = &quot;produit&quot;)
+&nbsp;public class Produit {
+&nbsp;
+&nbsp;	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;	@Column(name = &quot;id&quot;, nullable = false, unique = true)
+&nbsp;	private Long id;
+&nbsp;	
+&nbsp;	@Column(name = &quot;libelle&quot;, nullable = false)
+&nbsp;	private String libelle;
+&nbsp;	
+&nbsp;	@Column(name = &quot;description&quot;, nullable = false)
+&nbsp;	private String description;	
+&nbsp;	
+&nbsp;	@Column(name = &quot;prix&quot;,nullable = false, precision = 10, scale = 2)
+&nbsp;    private double prixDeBase;
+&nbsp;
+&nbsp;	@ManyToOne
+&nbsp;	@JoinColumn(name = &quot;categorie_idcategorie&quot;)
+&nbsp;	private Categorie categorie;
+&nbsp;	@ManyToOne(cascade = CascadeType.PERSIST)
+&nbsp;	@JoinColumn(name = &quot;promotion_idpromotion&quot;)
+&nbsp;	private Promotion promotion;
+&nbsp;
+&nbsp;	@Lob
+&nbsp;    @Column(name = &quot;image&quot;, length = Integer.MAX_VALUE, nullable = true)
+&nbsp;    private byte[] image;
+&nbsp;    
+&nbsp;    @Temporal(TemporalType.TIMESTAMP)
+&nbsp;    @Column(name = &quot;datecreation&quot;, nullable = false)
+&nbsp;    private Date datecreation;
+&nbsp;
+<b class="fc">&nbsp;	public Produit() {</b>
+&nbsp;
+&nbsp;	}
+&nbsp;
+<b class="nc">&nbsp;	public Produit(String libelle, String description, double prixDeBase, Categorie categorie, Promotion promotion, byte[] image, Date datecreation) {</b>
+<b class="nc">&nbsp;		this.libelle = libelle;</b>
+<b class="nc">&nbsp;		this.description = description;</b>
+<b class="nc">&nbsp;		this.prixDeBase = prixDeBase;</b>
+<b class="nc">&nbsp;		this.categorie = categorie;</b>
+<b class="nc">&nbsp;		this.promotion = promotion;</b>
+<b class="nc">&nbsp;		this.image = image;</b>
+<b class="nc">&nbsp;		this.datecreation = datecreation;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	// Vérifie ou met à jour une promotion associée à un produit après son chargement à partir de la base de données
+&nbsp;	@PostLoad
+&nbsp;	public void updatePromotion() {
+&nbsp;		// Si la promotion n&#39;est plus valide, elle est retirée du produit en la définissant à null
+<b class="fc">&nbsp;			if(promotion != null ) {</b>
+<b class="fc">&nbsp;			if (promotion.getDatedebut().isAfter(LocalDate.now()) || promotion.getDatefin().isBefore(LocalDate.now()) || promotion.getRemise() == 0) {</b>
+<b class="fc">&nbsp;				this.promotion=null;</b>
+&nbsp;				}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	public Long getId() {
+<b class="nc">&nbsp;		return id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setId(Long id) {
+<b class="nc">&nbsp;		this.id = id;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;		public String getLibelle() {
+<b class="nc">&nbsp;		return libelle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setLibelle(String libelle) {
+<b class="nc">&nbsp;		this.libelle = libelle;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public String getDescription() {
+<b class="nc">&nbsp;		return description;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Categorie getCategorie() {
+<b class="nc">&nbsp;		return categorie;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setCategorie(Categorie categorie) {
+<b class="nc">&nbsp;		this.categorie = categorie;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Promotion getPromotion() {
+<b class="fc">&nbsp;		return promotion;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPromotion(Promotion promotion) {
+<b class="fc">&nbsp;		this.promotion = promotion;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setDescription(String description) {
+<b class="nc">&nbsp;		this.description = description;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public double getPrixDeBase() {
+<b class="fc">&nbsp;		return prixDeBase;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setPrixDeBase(double prixDeBase) {
+<b class="fc">&nbsp;		this.prixDeBase = prixDeBase;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public byte[] getImage() {
+<b class="nc">&nbsp;		return image;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setImage(byte[] image) {
+<b class="nc">&nbsp;		this.image = image;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public Date getDatecreation() {
+<b class="nc">&nbsp;		return datecreation;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	public void setDatecreation(Date datecreation) {
+<b class="nc">&nbsp;		this.datecreation = datecreation;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="nc">&nbsp;		return &quot;Product [id=&quot; + id + &quot;, nom=&quot; + libelle + &quot;, description=&quot; + description + &quot;, prix=&quot; + prixDeBase + &quot;, image=&quot;</b>
+<b class="nc">&nbsp;				+ Arrays.toString(image) + &quot;, createDate=&quot; + datecreation + &quot;]&quot;;</b>
+&nbsp;	}
+&nbsp;   
+&nbsp;}
+&nbsp;
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-09-10 20:44</div>
+</div>
+</body>
+</html>

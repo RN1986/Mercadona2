@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > AuthentificationController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demoA</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthentificationController (com.example.demoA)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthentificationController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40%
+  </span>
+  <span class="absValue">
+    (2/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    35,7%
+  </span>
+  <span class="absValue">
+    (5/14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demoA;
+&nbsp;import com.example.demoA.Administrateurs.Administrateurs;
+&nbsp;import com.example.demoA.Administrateurs.AdministrateursService;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.security.core.userdetails.UserDetails;
+&nbsp;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.ui.Model;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+&nbsp;import org.springframework.web.servlet.ModelAndView;
+&nbsp;import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+&nbsp;
+&nbsp;import javax.servlet.http.HttpSession;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Controller
+&nbsp;public class AuthentificationController {
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(AuthentificationController.class);</b>
+&nbsp;
+&nbsp;    private AdministrateursService administrateursService;
+&nbsp;
+&nbsp;    private CustomUserDetailsService customUserDetailsService;
+&nbsp;
+<b class="fc">&nbsp;    public AuthentificationController(CustomUserDetailsService customUserDetailsService,AdministrateursService administrateursService) {</b>
+<b class="fc">&nbsp;        this.customUserDetailsService = customUserDetailsService;</b>
+<b class="fc">&nbsp;        this.administrateursService = administrateursService;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;/administrationauthentification&quot;)
+&nbsp;    public String showLoginPage(Model model) {
+<b class="nc">&nbsp;        model.addAttribute(&quot;erreurAuthentification&quot;, &quot;Le nom d&#39;utilisateur ou le mot de passe est incorrect. Veuillez essayer à nouveau&quot;);</b>
+<b class="nc">&nbsp;        model.addAttribute(&quot;logout&quot;,&quot;Vous avez été déconnecté avec succès&quot;);</b>
+<b class="nc">&nbsp;        return &quot;authentification&quot;; // Return the login page</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    Map&lt;String, String&gt; passwords = new HashMap(); //Contient le mot de passe associé à chaque utilisateur</b>
+&nbsp;
+&nbsp;    public void passwordsInit() {
+<b class="nc">&nbsp;        List&lt;Administrateurs&gt; administrateurs = administrateursService.findAll();</b>
+<b class="nc">&nbsp;        for (Administrateurs administrateur : administrateurs) {</b>
+<b class="nc">&nbsp;            passwords.put(administrateur.getNomutilisateur(), administrateur.getMotdepasse());</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    // Helper method to check if the password matches the hashed password
+&nbsp;    private boolean passwordMatches(String hashedPassword, String plainPassword) {
+&nbsp;        // Implement your secure password comparison logic here
+&nbsp;        // For example, using BCryptPasswordEncoder
+<b class="nc">&nbsp;         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</b>
+<b class="nc">&nbsp;         return passwordEncoder.matches(plainPassword, hashedPassword);</b>
+&nbsp;
+&nbsp;        // In a real application, use a secure password hashing algorithm.
+&nbsp;        // For demonstration purposes, we&#39;ll compare passwords as plain text (not recommended for production).
+&nbsp;        //return hashedPassword.equals(plainPassword);
+&nbsp;    }
+&nbsp;}
+&nbsp;
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-09-10 20:44</div>
+</div>
+</body>
+</html>
