@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0"
           name="viewport">
   <meta content="ie=edge" http-equiv="X-UA-Compatible">
   <title>Fiche Produit</title>
@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script defer src="/js/controleDates.js"></script>
 
 
 </head>
@@ -72,10 +73,13 @@
        <img th:if="${produit.image != null}" th:src="@{${'/image/produit/'+ produit.id}}" alt="Image du produit" type="image/jpeg" style="max-width: 100px; max-height: 100px;"/>
    </tbody>
  </table>
- </form>
 
 <!--Formulaire pour appliquer une promotion-->
  <h4 class="my-5">Appliquer une promotion</h4>
+<div id="succes" th:if="${not #strings.isEmpty(succes)}" class="alert alert-success text-center" th:text="${succes}"></div>
+
+<div id="dateError"  class="text-danger"></div>
+<!--<div id="succes" th:text="${succes}"  class="alert alert-success text-center"></div>-->
  <form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}+'/promotion'}" th:object="${promoProduit}">
    <div class="form-group">
      <label for="datedebut">Promotion : date de début</label>
@@ -93,8 +97,8 @@
     <input id="submitBtn"class="btn btn-primary" type="submit" value="Appliquer la promotion" />
   </div>
 </form>
-<div id="dateError" class="text-danger"></div>
-<div th:if="${produitMessage}" th:utext="${produitMessage}" class="alert alert-success text-center"></div>
+
+
 
 <!-- Suppression du produit (fonctionnalité non déployée car non demandée dans le cahier des charges mais pouvant faire l'objet d'une évolution future)
 <form method="post" th:action="@{'/administration/produit/'+${id}+'/supprimer'}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ?')">
@@ -106,22 +110,7 @@
 -->
 
 <!--script pour vérifier la cohérence des dates saisies dans le formulaire-->
-<script>
-document.getElementById("submitBtn").addEventListener("click", function(event) {
-  var datedebut = new Date(document.getElementById("datedebut").value);
-  var datefin = new Date(document.getElementById("datefin").value);
-  var currentDate = new Date();
-  var dateError = document.getElementById("dateError");
 
-else if (datefin <= datedebut) {
-    dateError.innerHTML = "La date de fin doit être postérieure à la date de début.";
-    event.preventDefault(); // Empêche l'envoi du formulaire
-  } else {
-    dateError.innerHTML = ""; // Efface le message d'erreur précédent
-
-  }
-});
-  </script>
 
 </body>
 </html>

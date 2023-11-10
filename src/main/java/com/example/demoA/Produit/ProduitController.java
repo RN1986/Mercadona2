@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -166,6 +168,8 @@ public String getAfficherPageAjoutProduit(Model model) {
 
 	}
 
+
+
 	//Administration : Affiche la page de recherche d'un produit
 	@Operation(description ="Affiche la page de recherche d'un produit")
 	@SecurityRequirement(name = "securityScheme")
@@ -226,7 +230,7 @@ public String getAfficherPageAjoutProduit(Model model) {
 	@Operation(description ="Affiche la fiche produit")
 	@SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}", method = RequestMethod.GET)
-	public String getAfficherFicheProduit(Model model, @PathVariable("id") Long id) {
+	public String getAfficherFicheProduit(HttpSession session,Model model, @PathVariable("id") Long id) {
 
 		model.addAttribute("produit", produitService.findById(id));
 		model.addAttribute("updatedProduit", produitService.findById(id));
@@ -234,16 +238,27 @@ public String getAfficherPageAjoutProduit(Model model) {
 		categories.remove(categorieService.getSelonLibelle(produitService.findById(id).getCategorie().getLibelle()));
 		model.addAttribute("categories", categories);
 		model.addAttribute("produitService",produitService);
+		session.getAttribute("succes");
+		String succesMessage = (String) session.getAttribute("succes");
+		if (succesMessage != null) {
+			// affiche le message de succès
+			model.addAttribute("succes", succesMessage);
+
+			// efface le message de succès de la session
+			session.removeAttribute("succes");
+		}
+
 
 		return "ficheProduit";
 	}
 
-//Administration : Applique une promotion au produit
+	//Administration : Applique une promotion au produit
 @Operation(description = "Applique une promotion au produit")
 @SecurityRequirement(name = "securityScheme")
 	@RequestMapping(path = "/administration/produit/{id}/promotion", method = RequestMethod.POST)
-	public RedirectView postAppliquerPromo(Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
-										@RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
+	public RedirectView postAppliquerPromo(HttpSession session,Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
+										   @RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
+	log.info("zzz dans le controller");
 		LocalDate datedebut = LocalDate.parse(datedebutStr);
 		LocalDate datefin = LocalDate.parse(datefinStr);
 		model.addAttribute("produitService", produitService);
@@ -253,11 +268,13 @@ public String getAfficherPageAjoutProduit(Model model) {
 		promoProduit.setPromotion(new Promotion(datedebut, datefin, remise,new Date()));
 
 		produitService.update(promoProduit);
-	log.info("zzz" + promoProduit.getPromotion());
+
+		session.setAttribute("succes", "Promotion appliquée");
+
 		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
+
 		return redirectView;
 	}
-
 
 //Affiche l'image du produit
 	@GetMapping("/image/produit/{id}")
