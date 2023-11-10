@@ -168,8 +168,6 @@ public String getAfficherPageAjoutProduit(Model model) {
 
 	}
 
-
-
 	//Administration : Affiche la page de recherche d'un produit
 	@Operation(description ="Affiche la page de recherche d'un produit")
 	@SecurityRequirement(name = "securityScheme")
@@ -179,7 +177,6 @@ public String getAfficherPageAjoutProduit(Model model) {
 		model.addAttribute("produits", produits);
 		model.addAttribute("produit_new", new Produit());
 		model.addAttribute("produitService",produitService);
-
 		return "RechercherProduit";
 	}
 
@@ -258,21 +255,17 @@ public String getAfficherPageAjoutProduit(Model model) {
 	@RequestMapping(path = "/administration/produit/{id}/promotion", method = RequestMethod.POST)
 	public RedirectView postAppliquerPromo(HttpSession session,Model model, @PathVariable("id") Long id, @RequestParam("datedebut")@DateTimeFormat(pattern = "yyyy-MM-dd") String datedebutStr,
 										   @RequestParam("datefin")@DateTimeFormat(pattern = "yyyy-MM-dd") String datefinStr, @RequestParam("remise")int remise) {
-	log.info("zzz dans le controller");
 		LocalDate datedebut = LocalDate.parse(datedebutStr);
 		LocalDate datefin = LocalDate.parse(datefinStr);
 		model.addAttribute("produitService", produitService);
 		Produit promoProduit = produitService.findById(id);
 		model.addAttribute("promoProduit", promoProduit);
-
 		promoProduit.setPromotion(new Promotion(datedebut, datefin, remise,new Date()));
-
 		produitService.update(promoProduit);
 
 		session.setAttribute("succes", "Promotion appliquée");
 
 		RedirectView redirectView = new RedirectView("/administration/produit/{id}", true);
-
 		return redirectView;
 	}
 

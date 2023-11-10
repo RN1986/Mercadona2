@@ -76,10 +76,10 @@
 
 <!--Formulaire pour appliquer une promotion-->
  <h4 class="my-5">Appliquer une promotion</h4>
-<div id="succes" th:if="${not #strings.isEmpty(succes)}" class="alert alert-success text-center" th:text="${succes}"></div>
-
-<div id="dateError"  class="text-danger"></div>
+<!--<div id="succes" th:if="${not #strings.isEmpty(succes)}" class="alert alert-success text-center" th:text="${succes}"></div>-->
 <!--<div id="succes" th:text="${succes}"  class="alert alert-success text-center"></div>-->
+<div id="dateError"  class="text-danger"></div>
+<div id="succes"  th:text="${succes}" class="text-success"></div>
  <form class="col card p-3" method="post" th:action="@{'/administration/produit/'+${id}+'/promotion'}" th:object="${promoProduit}">
    <div class="form-group">
      <label for="datedebut">Promotion : date de début</label>
