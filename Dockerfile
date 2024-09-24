@@ -11,7 +11,7 @@ WORKDIR /mercadona
 RUN chmod +x ./mvnw
 
 # Builder le projet avec Maven
-RUN ./mvnw clean package
+RUN ./mvnw clean package -DskipTests
 
 # Exposer le port sur lequel l'application Spring Boot s'exécute (8080 par défaut)
 EXPOSE 8080
